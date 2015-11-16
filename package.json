@@ -1,0 +1,28 @@
+{
+  "name": "react-date-picker-component",
+  "version": "0.0.1",
+  "description": "React date picker component",
+  "main": "datepicker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-uglify": "~0.5.0",
+    "body-parser": "~1.4.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-exec": "~0.4.6",
+    "express": "~4.0.0",
+    "react": "~0.14.1",
+    "react-dom": "~0.14.1"
+  },
+  "keywords": [
+    "datepicker",
+    "react",
+    "reactjs",
+    "date",
+    "calendar"
+  ],
+  "author": "Kristijan Pajtasev",
+  "license": "MIT"
+}
