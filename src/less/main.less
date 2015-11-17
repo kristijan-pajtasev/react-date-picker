@@ -1,0 +1,60 @@
+@font-size: 14px;
+@day-padding: .5em;
+@border-color: #C5D3E2;
+@disabled-color: #C5D3E2;
+@hover-color: #BCCAD9;
+@text-color: #1C2A39;
+@selected-background-color: #1C2A39;
+@selected-text-color: #C5D3E2;
+
+.datepicker {
+	* {
+		box-sizing: border-box;
+	}
+
+	.calendar {
+		ul {
+			list-style: none;
+			padding: 0;
+			width: 100%;
+			position: relative;
+
+			>li {
+				width: 100%;
+				position: relative;
+
+				>ul {
+					list-style: none;
+					padding: 0; 
+					width: 100%;
+					position: relative;
+					font-size: 0;
+					
+					>li {
+						display: inline-block;
+						font-size: @font-size;
+						width: 100% / 7;
+						text-align: center;
+						padding: @day-padding;
+						border: thin solid @border-color;
+						color: @text-color;
+
+						&.selected {
+							color: @selected-text-color;
+							background: @selected-background-color;
+						}
+
+						&.disabled {
+							color: @disabled-color;
+						}
+
+						&:not(.disabled):not(.selected):hover {
+							cursor: pointer;
+							background: @hover-color;
+						}
+					}
+				}
+			}
+		}
+	}
+}

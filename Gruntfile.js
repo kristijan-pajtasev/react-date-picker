@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         tasks: ['exec:webpack']
       },
       devLess: {
-        files: ['src/style/**/*.less'],
+        files: ['src/less/**/*.less'],
         tasks: ['exec:less']
       }
     }
