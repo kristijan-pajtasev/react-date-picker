@@ -8,7 +8,7 @@ module.exports = function(grunt) {
                 cmd: function() {
                         // return 'webpack';
                         // return 'webpack --optimize-minimize';
-                        return "babel src/js -d temp/ \n webpack temp/datepicker.js demo/bundle.js"
+                        return "babel src/js -d temp/ -b strict \n webpack temp/datepicker.js demo/bundle.js"
                 }
         },
         less: {

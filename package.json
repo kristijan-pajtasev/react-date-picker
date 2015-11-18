@@ -1,8 +1,8 @@
 {
   "name": "react-date-picker-component",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "React date picker component",
-  "main": "datepicker.js",
+  "main": "src/datepicker.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

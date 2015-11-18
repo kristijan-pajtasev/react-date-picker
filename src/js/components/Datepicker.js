@@ -12,7 +12,8 @@ var Datepicker = React.createClass({
 		return {
 				monthDays: monthDays,
 				selectedYear: selectedYear,
-				selectedMonth: selectedMonth
+				selectedMonth: selectedMonth,
+				selectedDay: undefined
 			 	};
 	},
 	changeMonth: function(direction) {
@@ -41,19 +42,30 @@ var Datepicker = React.createClass({
 		this.setState(newState);
 	},
 	changeYear: function(direction) {
-		var year = this.state.selectedYear + 1;
+		var year = this.state.selectedYear + direction;
 		var month = this.state.selectedMonth;
 		var newState = {
 				selectedMonth: month,
 				selectedYear: year,
 				monthDays: CalendarUtil.calendar(new Date(year, month))
 			 	};
-			 	console.log(newState)
 		this.setState(newState);
 	},
+	onChange: function(day) {
+		this.setState({ selectedDay: day });
+		if(!!this.props.onChange) { this.props.onChange(selectedDay); }
+	},
 	render: function() {
+		var selectedDateLabel = 'DD/MM/YYYY';
+		if(!!this.state.selectedDay) {
+			selectedDateLabel = this.state.selectedDay.getDate() + "/" +
+								(this.state.selectedMonth + 1) + "/" +
+								this.state.selectedYear;
+		}
 		return (<div className="datepicker">
 					<div>
+						<div>{selectedDateLabel}</div>
+
 						<div>
 							<button onClick={this.changeYear.bind(null, -1)}>prev</button>
 							Year: {this.state.selectedYear}
@@ -66,7 +78,7 @@ var Datepicker = React.createClass({
 							<button onClick={this.changeMonth.bind(null, 1)}>next</button>
 						</div>
 					</div>
-					<Calendar dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
+					<Calendar onChange={this.onChange} selectedDay={this.state.selectedDay} dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
 				</div>);
 	}
 })
