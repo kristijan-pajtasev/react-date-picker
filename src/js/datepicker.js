@@ -1,2 +1,2 @@
-Datepicker = require("./components/Datepicker");
+module.exports = require("./components/Datepicker");
 

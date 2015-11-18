@@ -1,4 +1,4 @@
-var React = require("react");
+var React = require("react"); 
 
 var Calendar = React.createClass({
 	getInitialState: function() {
@@ -6,14 +6,14 @@ var Calendar = React.createClass({
 		var state = {};
 		if(this.props.selectedDay) {
 			state.selectedDay = this.props.selectedDay
-		}
+		} 
 		return state;
 	},
 	setActive(day, canBeSet) {
 		if(canBeSet) {
 			this.setState({ selectedDay: day });
 			this.props.onChange(day);
-		} 
+		}
 	},
 	getWeeks: function(weeks) {
 		let weekRows = weeks.map((w,i) => { return <li key={i*Math.random()}>{this.getWeek(w)}</li>; } );
