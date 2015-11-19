@@ -10,7 +10,10 @@
 		<script src="https://fb.me/react-dom-0.14.2.js"></script>
 		<script type="text/javascript" src="bundle.js"></script>
 		<script type="text/javascript">
-			ReactDOM.render(React.createElement(Datepicker, null), document.getElementById("component"));
+			var monthsCRO = ["sijecanj", "veljaca", "ozujak", "travanj", "svibanj", "lipanj","srpanj",
+				"kolovoz", "rujan", "listopad", "studeni", "prosinac"];
+			function onChange() { console.log(arguments[0]) }
+			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange }), document.getElementById("component"));
 		</script>
 	</body>
 </html>

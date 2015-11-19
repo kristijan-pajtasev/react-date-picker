@@ -1,6 +1,6 @@
 {
   "name": "react-date-picker-component",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "React date picker component",
   "main": "dist/npm/datepicker.js",
   "scripts": {
@@ -23,6 +23,10 @@
     "date",
     "calendar"
   ],
+  "repository" : { 
+    "type" : "git",   
+    "url" : "https://github.com/kristijan-pajtasev/react-date-picker"
+  },
   "author": "Kristijan Pajtasev",
   "license": "MIT"
 }

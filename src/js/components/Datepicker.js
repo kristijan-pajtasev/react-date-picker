@@ -8,12 +8,16 @@ var Datepicker = React.createClass({
 		var selectedMonth = date.getMonth();
 		var selectedYear = date.getFullYear();
 		var monthDays = CalendarUtil.calendar(new Date(date.getTime()));
+		var months = this.props.monthLabels || ["January", "February", "March", "April", "May", 
+						"June", "July", "August", "September", "October", 
+						"November", "December"];
 
 		return {
 				monthDays: monthDays,
 				selectedYear: selectedYear,
 				selectedMonth: selectedMonth,
-				selectedDay: undefined
+				selectedDay: undefined,
+				monthLabels: months
 			 	};
 	},
 	changeMonth: function(direction) {
@@ -53,29 +57,29 @@ var Datepicker = React.createClass({
 	},
 	onChange: function(day) {
 		this.setState({ selectedDay: day });
-		if(!!this.props.onChange) { this.props.onChange(selectedDay); }
+		if(!!this.props.onChange) { this.props.onChange(day); }
 	},
 	render: function() {
-		var selectedDateLabel = 'DD/MM/YYYY';
+		var selectedDateLabel = 'DD/MM/YYYY'; 
 		if(!!this.state.selectedDay) {
 			selectedDateLabel = this.state.selectedDay.getDate() + "/" +
 								(this.state.selectedMonth + 1) + "/" +
 								this.state.selectedYear;
 		}
 		return (<div className="datepicker">
-					<div>
+					<div className="header">
 						<div>{selectedDateLabel}</div>
 
 						<div>
-							<button onClick={this.changeYear.bind(null, -1)}>prev</button>
+							<div className="prev" onClick={this.changeYear.bind(null, -1)}>prev</div>
 							Year: {this.state.selectedYear}
-							<button onClick={this.changeYear.bind(null, 1)}>next</button>
+							<div className="next" onClick={this.changeYear.bind(null, 1)}>next</div>
 						</div>
 
 						<div>
-							<button onClick={this.changeMonth.bind(null, -1)}>prev</button>
-							Month: {this.state.selectedMonth + 1}
-							<button onClick={this.changeMonth.bind(null, 1)}>next</button>
+							<div className="prev" onClick={this.changeMonth.bind(null, -1)}>prev</div>
+							{this.state.monthLabels[this.state.selectedMonth]}
+							<div className="next" onClick={this.changeMonth.bind(null, 1)}>next</div>
 						</div>
 					</div>
 					<Calendar onChange={this.onChange} selectedDay={this.state.selectedDay} dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
@@ -83,4 +87,4 @@ var Datepicker = React.createClass({
 	}
 })
 
-module.exports = Datepicker;
+module.exports = Datepicker;  
