@@ -1,6 +1,6 @@
-This component is in progress. Do not use yet.
-
 # React Datepicker Component
+
+##This component is in progress. Do not use yet.
 
 ## Installing 
 
@@ -33,6 +33,7 @@ function onChangeCallback(selectedDay) { /* some work */ }
 ReactDOM.render(<Datepicker onChange={onChangeCallback} />, document.getElementById("component"));
 ```
 
+### Initial date
 For initial selected date pass date object as selectedDate parameter.
 ```
 var date = new Date();
