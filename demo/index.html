@@ -13,7 +13,9 @@
 			var monthsCRO = ["sijecanj", "veljaca", "ozujak", "travanj", "svibanj", "lipanj","srpanj",
 				"kolovoz", "rujan", "listopad", "studeni", "prosinac"];
 			function onChange() { console.log(arguments[0]) }
-			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange }), document.getElementById("component"));
+			var selectedDate = new Date();
+			selectedDate.setMonth(4);
+			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate }), document.getElementById("component"));
 		</script>
 	</body>
 </html>

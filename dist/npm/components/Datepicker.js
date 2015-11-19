@@ -6,16 +6,19 @@ var Datepicker = React.createClass({
 	displayName: "Datepicker",
 
 	getInitialState: function getInitialState() {
-		var date = new Date();
+		var date = this.props.selectedDate || new Date();
+		var selectedDate = this.props.selectedDate;
 		var selectedMonth = date.getMonth();
 		var selectedYear = date.getFullYear();
 		var monthDays = CalendarUtil.calendar(new Date(date.getTime()));
+		var months = this.props.monthLabels || ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 		return {
 			monthDays: monthDays,
 			selectedYear: selectedYear,
 			selectedMonth: selectedMonth,
-			selectedDay: undefined
+			selectedDay: selectedDate,
+			monthLabels: months
 		};
 	},
 	changeMonth: function changeMonth(direction) {
@@ -56,7 +59,7 @@ var Datepicker = React.createClass({
 	onChange: function onChange(day) {
 		this.setState({ selectedDay: day });
 		if (!!this.props.onChange) {
-			this.props.onChange(selectedDay);
+			this.props.onChange(day);
 		}
 	},
 	render: function render() {
@@ -69,7 +72,7 @@ var Datepicker = React.createClass({
 			{ className: "datepicker" },
 			React.createElement(
 				"div",
-				null,
+				{ className: "header" },
 				React.createElement(
 					"div",
 					null,
@@ -79,15 +82,15 @@ var Datepicker = React.createClass({
 					"div",
 					null,
 					React.createElement(
-						"button",
-						{ onClick: this.changeYear.bind(null, -1) },
+						"div",
+						{ className: "prev", onClick: this.changeYear.bind(null, -1) },
 						"prev"
 					),
 					"Year: ",
 					this.state.selectedYear,
 					React.createElement(
-						"button",
-						{ onClick: this.changeYear.bind(null, 1) },
+						"div",
+						{ className: "next", onClick: this.changeYear.bind(null, 1) },
 						"next"
 					)
 				),
@@ -95,15 +98,14 @@ var Datepicker = React.createClass({
 					"div",
 					null,
 					React.createElement(
-						"button",
-						{ onClick: this.changeMonth.bind(null, -1) },
+						"div",
+						{ className: "prev", onClick: this.changeMonth.bind(null, -1) },
 						"prev"
 					),
-					"Month: ",
-					this.state.selectedMonth + 1,
+					this.state.monthLabels[this.state.selectedMonth],
 					React.createElement(
-						"button",
-						{ onClick: this.changeMonth.bind(null, 1) },
+						"div",
+						{ className: "next", onClick: this.changeMonth.bind(null, 1) },
 						"next"
 					)
 				)

@@ -33,6 +33,12 @@ function onChangeCallback(selectedDay) { /* some work */ }
 ReactDOM.render(<Datepicker onChange={onChangeCallback} />, document.getElementById("component"));
 ```
 
+For initial selected date pass date object as selectedDate parameter.
+```
+var date = new Date();
+ReactDOM.render(<Datepicker selectedDate={date} />, document.getElementById("component"));
+```
+
 ### Localization
 For month names localization, you can pass monthLabels property.
 

@@ -4,7 +4,6 @@ var Calendar = React.createClass({
 	displayName: "Calendar",
 
 	getInitialState: function getInitialState() {
-		console.log("getInitialState");
 		var state = {};
 		if (this.props.selectedDay) {
 			state.selectedDay = this.props.selectedDay;
