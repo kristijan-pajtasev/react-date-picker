@@ -6,7 +6,7 @@ var Datepicker = React.createClass({
 	displayName: "Datepicker",
 
 	getInitialState: function getInitialState() {
-		var date = this.props.selectedDate || new Date();
+		var date = this.props.displayMonth || this.props.selectedDate || new Date();
 		var selectedDate = this.props.selectedDate;
 		var selectedMonth = date.getMonth();
 		var selectedYear = date.getFullYear();

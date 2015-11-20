@@ -4,7 +4,7 @@ var Calendar = require("./Calendar");
 
 var Datepicker = React.createClass({
 	getInitialState: function() {
-		var date = this.props.selectedDate || new Date();
+		var date = this.props.displayMonth || this.props.selectedDate || new Date();
 		var selectedDate = this.props.selectedDate;
 		var selectedMonth = date.getMonth();
 		var selectedYear = date.getFullYear();

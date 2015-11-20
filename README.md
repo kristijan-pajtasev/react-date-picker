@@ -1,6 +1,6 @@
 # React Datepicker Component
 
-##This component is in progress. Do not use yet.
+## This component is in progress. Do not use yet.
 
 ## Installing 
 
@@ -38,6 +38,14 @@ For initial selected date pass date object as selectedDate parameter.
 ```
 var date = new Date();
 ReactDOM.render(<Datepicker selectedDate={date} />, document.getElementById("component"));
+```
+
+### Initialy displayed month
+If you want some month initialy displayed but not selecting some day, you can pass any day from that month
+as date object as displayMonth prop.
+```
+var date = new Date();
+ReactDOM.render(<Datepicker displayMonth={date} />, document.getElementById("component"));
 ```
 
 ### Localization

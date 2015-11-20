@@ -15,7 +15,10 @@
 			function onChange() { console.log(arguments[0]) }
 			var selectedDate = new Date();
 			selectedDate.setMonth(4);
-			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate }), document.getElementById("component"));
+			var displayMonth = new Date();
+			displayMonth.setMonth(7);
+			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate,
+				displayMonth: displayMonth }), document.getElementById("component"));
 		</script>
 	</body>
 </html>
