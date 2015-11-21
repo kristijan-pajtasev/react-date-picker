@@ -47,6 +47,10 @@ var Calendar = React.createClass({
 				classes.push("selected");
 			}
 
+			if (!!_this.props.minimumDate && _this.props.minimumDate > d) {
+				classes.push("disabled");
+			}
+
 			return React.createElement(
 				"li",
 				{ onClick: _this.setActive.bind(null, d, classes.indexOf("disabled") < 0),

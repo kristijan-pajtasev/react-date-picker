@@ -12,13 +12,19 @@ var Datepicker = React.createClass({
 		var months = this.props.monthLabels || ["January", "February", "March", "April", "May", 
 						"June", "July", "August", "September", "October", 
 						"November", "December"];
+		var minimumDate = this.props.minimumDate;
+		minimumDate.setHours(0);
+		minimumDate.setMinutes(0);
+		minimumDate.setSeconds(0);
+		minimumDate.setMilliseconds(0)
 
 		return {
 				monthDays: monthDays,
 				selectedYear: selectedYear,
 				selectedMonth: selectedMonth,
 				selectedDay: selectedDate,
-				monthLabels: months
+				monthLabels: months,
+				minimumDate: minimumDate
 			 	};
 	},
 	changeMonth: function(direction) {
@@ -83,7 +89,7 @@ var Datepicker = React.createClass({
 							<div className="next" onClick={this.changeMonth.bind(null, 1)}>next</div>
 						</div>
 					</div>
-					<Calendar onChange={this.onChange} selectedDay={this.state.selectedDay} dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
+					<Calendar minimumDate={this.state.minimumDate} onChange={this.onChange} selectedDay={this.state.selectedDay} dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
 				</div>);
 	}
 })

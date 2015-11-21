@@ -48,6 +48,14 @@ var date = new Date();
 ReactDOM.render(<Datepicker displayMonth={date} />, document.getElementById("component"));
 ```
 
+### Minimum date
+You can define minimum possible date by passing minimumDate flag.
+
+```
+var minumumDate = new Date();
+ReactDOM.render(<Datepicker minimumDate={minimumDate} />, document.getElementById("component"));
+```
+
 ### Localization
 For month names localization, you can pass monthLabels property.
 

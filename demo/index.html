@@ -17,8 +17,11 @@
 			selectedDate.setMonth(4);
 			var displayMonth = new Date();
 			displayMonth.setMonth(7);
+			var minimumDate = new Date();
+			minimumDate.setMonth(0);
+			minimumDate.setDate(15);
 			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate,
-				displayMonth: displayMonth }), document.getElementById("component"));
+				displayMonth: displayMonth, minimumDate: minimumDate }), document.getElementById("component"));
 		</script>
 	</body>
 </html>

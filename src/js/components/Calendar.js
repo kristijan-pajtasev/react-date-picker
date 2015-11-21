@@ -29,6 +29,10 @@ var Calendar = React.createClass({
 				d.getMonth() == selectedDay.getMonth() &&
 				d.getFullYear() == selectedDay.getFullYear())) { classes.push("selected"); }
 
+			if(!!this.props.minimumDate && this.props.minimumDate>d) {
+				classes.push("disabled");
+			}
+
 			return (<li onClick={this.setActive.bind(null, d, classes.indexOf("disabled") < 0)} 
 								className={classes.join(" ")} 
 								key={Math.random()*i}>{d.getDate()}</li>); } );
