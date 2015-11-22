@@ -45,47 +45,75 @@
 	}
 
 	.calendar {
-		ul {
-			list-style: none;
-			padding: 0;
-			width: 100%;
-			position: relative;
-			margin: 0;
+		width: 100%;
+		border: thin solid @border-color;
+		border-collapse: collapse;
 
-			>li {
-				width: 100%;
+		.controls {
+
+			>div {
+				border-left: 2px solid @border-color;
+				border-right: 2px solid @border-color;
+				border-top: 2px solid @border-color;
 				position: relative;
+				padding: @day-padding;
 
-				>ul {
-					list-style: none;
-					padding: 0; 
-					width: 100%;
-					position: relative;
-					font-size: 0;
-					
-					>li {
-						display: inline-block;
-						font-size: @font-size;
-						width: 100% / 7;
-						text-align: center;
-						padding: @day-padding;
-						border: thin solid @border-color;
-						color: @text-color;
+				>div {
+				// 	display: inline-block;
+					background: white;
+					position: absolute;
+					height: 100%;
+					width: auto;
+					top: 0;
+					cursor: pointer;
+					padding: @day-padding;
 
-						&.selected {
-							color: @selected-text-color;
-							background: @selected-background-color;
-						}
-
-						&.disabled {
-							color: @disabled-color;
-						}
-
-						&:not(.disabled):not(.selected):hover {
-							cursor: pointer;
-							background: @hover-color;
-						}
+					&.prev {
+						left: 0;
+						border-right: thin solid @border-color;
 					}
+
+					&.next {
+						right: 0;
+						border-left: thin solid @border-color;
+					}
+
+				}
+			// 	display: inline-block;
+			// 	background: white;
+			// 	position: absolute;
+			// 	height: 100%;
+			// 	width: auto;
+			// 	top: 0;
+			// 	padding: @day-padding;
+			// 	cursor: pointer;
+			}
+		}
+
+		.week {
+			width: 100%;
+
+			.day {
+				display: inline-block;
+				font-size: @font-size;
+				width: 100% / 7;
+				text-align: center;
+				padding: @day-padding;
+				border: thin solid @border-color;
+				color: @text-color;
+
+				&.selected {
+					color: @selected-text-color;
+					background: @selected-background-color;
+				}
+
+				&.disabled {
+					color: @disabled-color;
+				}
+
+				&:not(.disabled):not(.selected):hover {
+					cursor: pointer;
+					background: @hover-color;
 				}
 			}
 		}

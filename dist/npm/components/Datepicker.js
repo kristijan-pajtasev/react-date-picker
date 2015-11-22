@@ -83,42 +83,26 @@ var Datepicker = React.createClass({
 					"div",
 					null,
 					selectedDateLabel
-				),
-				React.createElement(
-					"div",
-					null,
-					React.createElement(
-						"div",
-						{ className: "prev", onClick: this.changeYear.bind(null, -1) },
-						"prev"
-					),
-					"Year: ",
-					this.state.selectedYear,
-					React.createElement(
-						"div",
-						{ className: "next", onClick: this.changeYear.bind(null, 1) },
-						"next"
-					)
-				),
-				React.createElement(
-					"div",
-					null,
-					React.createElement(
-						"div",
-						{ className: "prev", onClick: this.changeMonth.bind(null, -1) },
-						"prev"
-					),
-					this.state.monthLabels[this.state.selectedMonth],
-					React.createElement(
-						"div",
-						{ className: "next", onClick: this.changeMonth.bind(null, 1) },
-						"next"
-					)
 				)
 			),
-			React.createElement(Calendar, { minimumDate: this.state.minimumDate, onChange: this.onChange, selectedDay: this.state.selectedDay, dates: this.state.monthDays, selectedMonth: this.state.selectedMonth })
+			React.createElement(Calendar, {
+				changeMonth: this.changeMonth,
+				changeYear: this.changeYear,
+				minimumDate: this.state.minimumDate, onChange: this.onChange, selectedDay: this.state.selectedDay, dates: this.state.monthDays, selectedMonth: this.state.selectedMonth })
 		);
 	}
 });
 
 module.exports = Datepicker;
+
+// <div>
+// 	<div className="prev" onClick={this.changeYear.bind(null, -1)}>prev</div>
+// 	Year: {this.state.selectedYear}
+// 	<div className="next" onClick={this.changeYear.bind(null, 1)}>next</div>
+// </div>
+
+// <div>
+// 	<div className="prev" onClick={this.changeMonth.bind(null, -1)}>prev</div>
+// 	{this.state.monthLabels[this.state.selectedMonth]}
+// 	<div className="next" onClick={this.changeMonth.bind(null, 1)}>next</div>
+// </div>

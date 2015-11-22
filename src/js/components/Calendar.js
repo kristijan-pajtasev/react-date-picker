@@ -15,14 +15,14 @@ var Calendar = React.createClass({
 		}
 	},
 	getWeeks: function(weeks) {
-		let weekRows = weeks.map((w,i) => { return <li key={i*Math.random()}>{this.getWeek(w)}</li>; } );
-		return <ul>{weekRows}</ul>;
+		let weekRows = weeks.map((w,i) => { return <tr className="week" key={i*Math.random()}>{this.getWeek(w)}</tr>; } );
+		return <tbody>{weekRows}</tbody>;
 	},
 	getWeek: function(week) {
 		var selectedDay = this.state.selectedDay;
-		let days = week.map((d,i) => { 
+		return week.map((d,i) => { 
 
-			var classes = [];
+			var classes = ["day"];
 			if(d.getMonth() != this.props.selectedMonth) { classes.push("disabled"); }
 
 			if(!!selectedDay && (d.getDate() == selectedDay.getDate() &&
@@ -33,13 +33,32 @@ var Calendar = React.createClass({
 				classes.push("disabled");
 			}
 
-			return (<li onClick={this.setActive.bind(null, d, classes.indexOf("disabled") < 0)} 
+			return (<td onClick={this.setActive.bind(null, d, classes.indexOf("disabled") < 0)} 
 								className={classes.join(" ")} 
-								key={Math.random()*i}>{d.getDate()}</li>); } );
-		return <ul>{days}</ul>
+								key={Math.random()*i}>{d.getDate()}</td>); } );
+	},
+	getHeader: function(hasControls) {
+		hasControls = true;
+		if(hasControls) {  
+			return (<caption className="controls">
+						<div>
+							<div className="prev" onClick={this.props.changeYear.bind(null, -1)}>prev</div>
+							Year: {this.state.selectedDay.getFullYear()}
+							<div className="next" onClick={this.props.changeYear.bind(null, 1)}>next</div>
+						</div>
+
+						<div>
+							<div className="prev" onClick={this.props.changeMonth.bind(null, -1)}>prev</div>
+							Month: {this.state.selectedDay.getMonth() + 1}
+							<div className="next" onClick={this.props.changeMonth.bind(null, 1)}>next</div>
+						</div>
+					</caption>);
+		} else {
+			return null;
+		}
 	},
 	render: function() {
-		return <div className="calendar">{this.getWeeks(this.props.dates)}</div>;
+		return <table className="calendar">{this.getHeader()}{this.getWeeks(this.props.dates)}</table>;
 	}
 });
 

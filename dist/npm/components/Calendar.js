@@ -21,13 +21,13 @@ var Calendar = React.createClass({
 
 		var weekRows = weeks.map(function (w, i) {
 			return React.createElement(
-				"li",
-				{ key: i * Math.random() },
+				"tr",
+				{ className: "week", key: i * Math.random() },
 				_this.getWeek(w)
 			);
 		});
 		return React.createElement(
-			"ul",
+			"tbody",
 			null,
 			weekRows
 		);
@@ -36,9 +36,9 @@ var Calendar = React.createClass({
 		var _this = this;
 
 		var selectedDay = this.state.selectedDay;
-		var days = week.map(function (d, i) {
+		return week.map(function (d, i) {
 
-			var classes = [];
+			var classes = ["day"];
 			if (d.getMonth() != _this.props.selectedMonth) {
 				classes.push("disabled");
 			}
@@ -52,23 +52,62 @@ var Calendar = React.createClass({
 			}
 
 			return React.createElement(
-				"li",
+				"td",
 				{ onClick: _this.setActive.bind(null, d, classes.indexOf("disabled") < 0),
 					className: classes.join(" "),
 					key: Math.random() * i },
 				d.getDate()
 			);
 		});
-		return React.createElement(
-			"ul",
-			null,
-			days
-		);
+	},
+	getHeader: function getHeader(hasControls) {
+		hasControls = true;
+		if (hasControls) {
+			return React.createElement(
+				"caption",
+				{ className: "controls" },
+				React.createElement(
+					"div",
+					null,
+					React.createElement(
+						"div",
+						{ className: "prev", onClick: this.props.changeYear.bind(null, -1) },
+						"prev"
+					),
+					"Year: ",
+					this.state.selectedDay.getFullYear(),
+					React.createElement(
+						"div",
+						{ className: "next", onClick: this.props.changeYear.bind(null, 1) },
+						"next"
+					)
+				),
+				React.createElement(
+					"div",
+					null,
+					React.createElement(
+						"div",
+						{ className: "prev", onClick: this.props.changeMonth.bind(null, -1) },
+						"prev"
+					),
+					"Month: ",
+					this.state.selectedDay.getMonth() + 1,
+					React.createElement(
+						"div",
+						{ className: "next", onClick: this.props.changeMonth.bind(null, 1) },
+						"next"
+					)
+				)
+			);
+		} else {
+			return null;
+		}
 	},
 	render: function render() {
 		return React.createElement(
-			"div",
+			"table",
 			{ className: "calendar" },
+			this.getHeader(),
 			this.getWeeks(this.props.dates)
 		);
 	}
