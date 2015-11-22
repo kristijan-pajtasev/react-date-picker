@@ -6,8 +6,8 @@ var Datepicker = React.createClass({
 	getInitialState: function() {
 		var date = this.props.displayMonth || this.props.selectedDate || new Date();
 		var selectedDate = this.props.selectedDate;
-		var selectedMonth = date.getMonth();
-		var selectedYear = date.getFullYear();
+		var selectedMonth = selectedDate.getMonth();
+		var selectedYear = selectedDate.getFullYear();
 		var monthDays = CalendarUtil.calendar(new Date(date.getTime()));
 		var months = this.props.monthLabels || ["January", "February", "March", "April", "May", 
 						"June", "July", "August", "September", "October", 
@@ -16,7 +16,8 @@ var Datepicker = React.createClass({
 		minimumDate.setHours(0);
 		minimumDate.setMinutes(0);
 		minimumDate.setSeconds(0);
-		minimumDate.setMilliseconds(0)
+		minimumDate.setMilliseconds(0);
+		var showControls = this.props.showControls != undefined ? this.props.showControls : true;
 
 		return {
 				monthDays: monthDays,
@@ -24,7 +25,8 @@ var Datepicker = React.createClass({
 				selectedMonth: selectedMonth,
 				selectedDay: selectedDate,
 				monthLabels: months,
-				minimumDate: minimumDate
+				minimumDate: minimumDate,
+				showControls: showControls
 			 	};
 	},
 	changeMonth: function(direction) {
@@ -75,26 +77,14 @@ var Datepicker = React.createClass({
 		}
 		return (<div className="datepicker">
 					<div className="header"> 
-						<div>{selectedDateLabel}</div>
+						{selectedDateLabel}
 					</div>
 					<Calendar
 						changeMonth={this.changeMonth}
-						changeYear={this.changeYear}
+						changeYear={this.changeYear} showControls={this.state.showControls}
 						minimumDate={this.state.minimumDate} onChange={this.onChange} selectedDay={this.state.selectedDay} dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
 				</div>);
 	}
 })
 
 module.exports = Datepicker;  
-
-// <div>
-// 	<div className="prev" onClick={this.changeYear.bind(null, -1)}>prev</div>
-// 	Year: {this.state.selectedYear}
-// 	<div className="next" onClick={this.changeYear.bind(null, 1)}>next</div>
-// </div>
-
-// <div>
-// 	<div className="prev" onClick={this.changeMonth.bind(null, -1)}>prev</div>
-// 	{this.state.monthLabels[this.state.selectedMonth]}
-// 	<div className="next" onClick={this.changeMonth.bind(null, 1)}>next</div>
-// </div>

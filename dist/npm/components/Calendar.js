@@ -60,9 +60,10 @@ var Calendar = React.createClass({
 			);
 		});
 	},
-	getHeader: function getHeader(hasControls) {
-		hasControls = true;
-		if (hasControls) {
+	getHeader: function getHeader(showControls) {
+		var prev = "<";
+		var next = ">";
+		if (showControls) {
 			return React.createElement(
 				"caption",
 				{ className: "controls" },
@@ -72,14 +73,14 @@ var Calendar = React.createClass({
 					React.createElement(
 						"div",
 						{ className: "prev", onClick: this.props.changeYear.bind(null, -1) },
-						"prev"
+						prev
 					),
 					"Year: ",
 					this.state.selectedDay.getFullYear(),
 					React.createElement(
 						"div",
 						{ className: "next", onClick: this.props.changeYear.bind(null, 1) },
-						"next"
+						next
 					)
 				),
 				React.createElement(
@@ -88,14 +89,14 @@ var Calendar = React.createClass({
 					React.createElement(
 						"div",
 						{ className: "prev", onClick: this.props.changeMonth.bind(null, -1) },
-						"prev"
+						prev
 					),
 					"Month: ",
 					this.state.selectedDay.getMonth() + 1,
 					React.createElement(
 						"div",
 						{ className: "next", onClick: this.props.changeMonth.bind(null, 1) },
-						"next"
+						next
 					)
 				)
 			);
@@ -107,7 +108,7 @@ var Calendar = React.createClass({
 		return React.createElement(
 			"table",
 			{ className: "calendar" },
-			this.getHeader(),
+			this.getHeader(this.props.showControls),
 			this.getWeeks(this.props.dates)
 		);
 	}

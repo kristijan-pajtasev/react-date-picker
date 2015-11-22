@@ -37,20 +37,21 @@ var Calendar = React.createClass({
 								className={classes.join(" ")} 
 								key={Math.random()*i}>{d.getDate()}</td>); } );
 	},
-	getHeader: function(hasControls) {
-		hasControls = true;
-		if(hasControls) {  
+	getHeader: function(showControls) {
+		let prev = '<';
+		let next = '>';
+		if(showControls) {  
 			return (<caption className="controls">
 						<div>
-							<div className="prev" onClick={this.props.changeYear.bind(null, -1)}>prev</div>
+							<div className="prev" onClick={this.props.changeYear.bind(null, -1)}>{prev}</div>
 							Year: {this.state.selectedDay.getFullYear()}
-							<div className="next" onClick={this.props.changeYear.bind(null, 1)}>next</div>
+							<div className="next" onClick={this.props.changeYear.bind(null, 1)}>{next}</div>
 						</div>
 
 						<div>
-							<div className="prev" onClick={this.props.changeMonth.bind(null, -1)}>prev</div>
+							<div className="prev" onClick={this.props.changeMonth.bind(null, -1)}>{prev}</div>
 							Month: {this.state.selectedDay.getMonth() + 1}
-							<div className="next" onClick={this.props.changeMonth.bind(null, 1)}>next</div>
+							<div className="next" onClick={this.props.changeMonth.bind(null, 1)}>{next}</div>
 						</div>
 					</caption>);
 		} else {
@@ -58,7 +59,7 @@ var Calendar = React.createClass({
 		}
 	},
 	render: function() {
-		return <table className="calendar">{this.getHeader()}{this.getWeeks(this.props.dates)}</table>;
+		return <table className="calendar">{this.getHeader(this.props.showControls)}{this.getWeeks(this.props.dates)}</table>;
 	}
 });
 

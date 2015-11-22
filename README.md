@@ -48,6 +48,13 @@ var date = new Date();
 ReactDOM.render(<Datepicker displayMonth={date} />, document.getElementById("component"));
 ```
 
+### Show/hide controls
+If you want to hide controls for changing year or month just add showControls property
+with value of false. By default this property is true.
+```
+ReactDOM.render(<Datepicker showControls={false} />, document.getElementById("component"));
+```
+
 ### Minimum date
 You can define minimum possible date by passing minimumDate flag.
 
