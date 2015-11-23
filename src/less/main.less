@@ -4,7 +4,7 @@
 @disabled-color: #C5D3E2;
 @hover-color: #BCCAD9;
 @text-color: #1C2A39;
-@selected-background-color: #1C2A39;
+@selected-background-color: #3498DB;
 @selected-text-color: #C5D3E2;
 
 .datepicker {
@@ -14,9 +14,9 @@
 
 	>.header {
 		width: 100%;
-		border-left: 2px solid @border-color;
-		border-right: 2px solid @border-color;
-		border-top: 2px solid @border-color;
+		border-left: thin solid @border-color;
+		border-right: thin solid @border-color;
+		border-top: thin solid @border-color;
 		text-align: center;
 		padding: @day-padding;
 	}
@@ -24,14 +24,15 @@
 	.calendar {
 		width: 100%;
 		border: thin solid @border-color;
-		border-collapse: collapse;
+  		border-collapse: collapse;
+    	border-spacing: 0;
 
 		.controls {
 
 			>div {
-				border-left: 2px solid @border-color;
-				border-right: 2px solid @border-color;
-				border-top: 2px solid @border-color;
+				border-left: thin solid @border-color;
+				border-right: thin solid @border-color;
+				border-top: thin solid @border-color;
 				position: relative;
 				padding: @day-padding;
 
@@ -40,7 +41,7 @@
 					position: absolute;
 					height: 100%;
 					width: auto;
-					top: 0;
+					top: 0; 
 					cursor: pointer;
 					padding: @day-padding;
 
@@ -62,7 +63,6 @@
 			width: 100%;
 
 			.day {
-				display: inline-block;
 				font-size: @font-size;
 				width: 100% / 7;
 				text-align: center;
@@ -71,8 +71,9 @@
 				color: @text-color;
 
 				&.selected {
-					color: @selected-text-color;
-					background: @selected-background-color;
+					color: @selected-background-color;
+					// background: @selected-background-color;
+					border-bottom: 2px solid @selected-background-color;
 				}
 
 				&.disabled {

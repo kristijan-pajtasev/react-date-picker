@@ -3,9 +3,9 @@
 }
 .datepicker > .header {
   width: 100%;
-  border-left: 2px solid #c5d3e2;
-  border-right: 2px solid #c5d3e2;
-  border-top: 2px solid #c5d3e2;
+  border-left: thin solid #c5d3e2;
+  border-right: thin solid #c5d3e2;
+  border-top: thin solid #c5d3e2;
   text-align: center;
   padding: 0.5em;
 }
@@ -13,11 +13,12 @@
   width: 100%;
   border: thin solid #c5d3e2;
   border-collapse: collapse;
+  border-spacing: 0;
 }
 .datepicker .calendar .controls > div {
-  border-left: 2px solid #c5d3e2;
-  border-right: 2px solid #c5d3e2;
-  border-top: 2px solid #c5d3e2;
+  border-left: thin solid #c5d3e2;
+  border-right: thin solid #c5d3e2;
+  border-top: thin solid #c5d3e2;
   position: relative;
   padding: 0.5em;
 }
@@ -42,7 +43,6 @@
   width: 100%;
 }
 .datepicker .calendar .week .day {
-  display: inline-block;
   font-size: 14px;
   width: 14.28571429%;
   text-align: center;
@@ -51,8 +51,8 @@
   color: #1c2a39;
 }
 .datepicker .calendar .week .day.selected {
-  color: #c5d3e2;
-  background: #1c2a39;
+  color: #3498db;
+  border-bottom: 2px solid #3498db;
 }
 .datepicker .calendar .week .day.disabled {
   color: #c5d3e2;
