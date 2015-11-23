@@ -39,6 +39,7 @@ var Calendar = React.createClass({
 		return week.map(function (d, i) {
 
 			var classes = ["day"];
+			// let style=this.props.customStyle.day || {};
 			if (d.getMonth() != _this.props.selectedMonth) {
 				classes.push("disabled");
 			}
@@ -54,11 +55,39 @@ var Calendar = React.createClass({
 			return React.createElement(
 				"td",
 				{ onClick: _this.setActive.bind(null, d, classes.indexOf("disabled") < 0),
-					className: classes.join(" "),
+					className: classes.join(" "), style: _this.getStyleForClasses(classes),
 					key: Math.random() * i },
 				d.getDate()
 			);
 		});
+	},
+	getStyleForClasses: function getStyleForClasses(classes) {
+		var style = {};
+		if (classes.indexOf("day") >= 0) {
+			var dayStyle = this.props.customStyle.day || {};
+			var keys = Object.keys(dayStyle);
+			for (var i = 0, _length = keys.length; i < _length; i++) {
+				var _key = keys[i];
+				style[_key] = dayStyle[_key];
+			}
+		}
+		if (classes.indexOf("selected") >= 0) {
+			var selectedStyle = this.props.customStyle.selected || {};
+			var keys = Object.keys(selectedStyle);
+			for (var i = 0, _length2 = keys.length; i < _length2; i++) {
+				var _key2 = keys[i];
+				style[_key2] = selectedStyle[_key2];
+			}
+		}
+		if (classes.indexOf("disabled") >= 0) {
+			var disabledStyle = this.props.customStyle.disabled || {};
+			var keys = Object.keys(disabledStyle);
+			for (var i = 0, _length3 = keys.length; i < _length3; i++) {
+				var _key3 = keys[i];
+				style[_key3] = disabledStyle[_key3];
+			}
+		}
+		return style;
 	},
 	getHeader: function getHeader(showControls) {
 		var prev = "<";
@@ -66,20 +95,22 @@ var Calendar = React.createClass({
 		if (showControls) {
 			return React.createElement(
 				"caption",
-				{ className: "controls" },
+				{ className: "controls", style: this.props.customStyle.controls || {} },
 				React.createElement(
 					"div",
 					null,
 					React.createElement(
 						"div",
-						{ className: "prev", onClick: this.props.changeYear.bind(null, -1) },
+						{ className: "prev", onClick: this.props.changeYear.bind(null, -1),
+							style: this.props.customStyle.prev || {} },
 						prev
 					),
 					"Year: ",
 					this.state.selectedDay.getFullYear(),
 					React.createElement(
 						"div",
-						{ className: "next", onClick: this.props.changeYear.bind(null, 1) },
+						{ className: "next", onClick: this.props.changeYear.bind(null, 1),
+							style: this.props.customStyle.next || {} },
 						next
 					)
 				),
@@ -88,14 +119,16 @@ var Calendar = React.createClass({
 					null,
 					React.createElement(
 						"div",
-						{ className: "prev", onClick: this.props.changeMonth.bind(null, -1) },
+						{ className: "prev", onClick: this.props.changeMonth.bind(null, -1),
+							style: this.props.customStyle.prev || {} },
 						prev
 					),
 					"Month: ",
 					this.state.selectedDay.getMonth() + 1,
 					React.createElement(
 						"div",
-						{ className: "next", onClick: this.props.changeMonth.bind(null, 1) },
+						{ className: "next", onClick: this.props.changeMonth.bind(null, 1),
+							style: this.props.customStyle.next || {} },
 						next
 					)
 				)
@@ -107,7 +140,7 @@ var Calendar = React.createClass({
 	render: function render() {
 		return React.createElement(
 			"table",
-			{ className: "calendar" },
+			{ className: "calendar", style: this.props.customStyle.calendar || {} },
 			this.getHeader(this.props.showControls),
 			this.getWeeks(this.props.dates)
 		);

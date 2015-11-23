@@ -20,8 +20,13 @@
 			var minimumDate = new Date();
 			minimumDate.setMonth(0);
 			minimumDate.setDate(15);
+			var customStyle = { 
+				header: {
+					color: "#3498DB" 
+				}
+			}	
 
-			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate,displayMonth: displayMonth, minimumDate: minimumDate, showControls: true }), 
+			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate,displayMonth: displayMonth, minimumDate: minimumDate, showControls: true, customStyle: customStyle }), 
 				document.getElementById("component"));
 		</script>
 	</body>

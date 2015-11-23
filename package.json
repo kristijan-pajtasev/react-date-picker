@@ -1,6 +1,6 @@
 {
   "name": "react-date-picker-component",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "React date picker component",
   "main": "dist/npm/datepicker.js",
   "scripts": {
@@ -21,7 +21,10 @@
     "react",
     "reactjs",
     "date",
-    "calendar"
+    "calendar",
+    "component",
+    "date-picker",
+    "react-component"
   ],
   "repository" : { 
     "type" : "git",   

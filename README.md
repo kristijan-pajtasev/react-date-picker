@@ -72,7 +72,34 @@ ReactDOM.render(<Datepicker monthLabels={labels} />, document.getElementById("co
 ```
 
 ## Styling
-For now there is no styling by using npm, but will be added in next few days.
-Current default styling can be taken from github repository from dist folder,
-or under src/less folder LESS version (will be refactored for easy changing colors, 
-font sizes, paddings...).
+Currently there are three ways of styling for date picker. You can use default which can be downloaded from 
+github in CSS or SASS format. This is not recomended because it is just some default format. You can add custom 
+style to directive as parameter or write your CSS. Last two methodes are described before. 
+
+### Structure
+Whole component is in div element with class datepicker. Inside there are two elements in first depth level. 
+Div with class header where is displayed selected date in format DD/MM/YYY. Next is table with class calendar. 
+Inside we have caption with class controls which contains two divs (one for month changing and one for year 
+changing) with two more elements. Moving into past element with class prev and into future with class next. 
+Each week is table row with class week. Each day has class day. If day is not possible to be clicked it has 
+class disabled, and selected day has class selected.
+
+### Styling as component parameter
+To add some style to part of component you can pass JSON object for styling as customStyle property.
+Using classes as keys you choose which part will have which style. Important thing is that React uses 
+camel case for property names so in you styling definition you will not have font-weight but fontWeight. 
+
+```
+var customStyle = {
+	header: {
+		"color": "blue",
+		"fontWeight": "bold"
+	}
+}
+ReactDOM.render(<Datepicker customStyle={customStyle} />, document.getElementById("component"));
+```
+
+### Styling as CSS
+You can use this structure and usual CSS selectors for styling this component. So for styling day 
+element you can use .day selector or .day.selected for selected day. This is recomended usage 
+because like this you can use different pseudoselectors like :hover and you can use media queries.
