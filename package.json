@@ -1,6 +1,6 @@
 {
   "name": "react-date-picker-component",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React date picker component",
   "main": "dist/npm/datepicker.js",
   "scripts": {
@@ -15,6 +15,9 @@
     "express": "~4.0.0",
     "react": "~0.14.1",
     "react-dom": "~0.14.1"
+  },
+  "dependencies": {
+    "react": "~0.14.1"
   },
   "keywords": [
     "datepicker",
