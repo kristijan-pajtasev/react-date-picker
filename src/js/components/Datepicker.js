@@ -22,6 +22,11 @@ var Datepicker = React.createClass({
 		var showControls = this.props.showControls != undefined ? this.props.showControls : true;
 		var customStyle = this.props.customStyle || {};
 
+		var showDaysLabels = this.props.showDaysLabels !== undefined ? this.props.showDaysLabels : true;
+		var daysLabels = this.props.daysLabels || 
+			["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
+			"Saturday", "Sunday"];
+
 		return {
 				monthDays: monthDays,
 				selectedYear: selectedYear,
@@ -30,7 +35,9 @@ var Datepicker = React.createClass({
 				monthLabels: months,
 				minimumDate: minimumDate,
 				showControls: showControls,
-				customStyle: customStyle
+				customStyle: customStyle,
+				showDaysLabels: showDaysLabels,
+				daysLabels: daysLabels
 			 	};
 	},
 	changeMonth: function(direction) {
@@ -86,6 +93,7 @@ var Datepicker = React.createClass({
 					<Calendar
 						changeMonth={this.changeMonth} customStyle={this.state.customStyle}
 						changeYear={this.changeYear} showControls={this.state.showControls}
+						showDaysLabels={this.state.showDaysLabels} daysLabels={this.state.daysLabels}
 						minimumDate={this.state.minimumDate} onChange={this.onChange} selectedDay={this.state.selectedDay} dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
 				</div>);
 	}

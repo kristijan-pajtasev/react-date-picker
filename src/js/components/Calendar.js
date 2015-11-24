@@ -70,7 +70,7 @@ var Calendar = React.createClass({
 		} 
 		return style;
 	},
-	getHeader: function(showControls) {
+	getCaption: function(showControls) {
 		let prev = '<';
 		let next = '>';
 		if(showControls) {  
@@ -95,9 +95,26 @@ var Calendar = React.createClass({
 			return null;
 		}
 	},
+	getHeader: function(showHeader) {
+		if(showHeader) {
+			var days = 
+				this.props.daysLabels
+					.map((d, i) => <th className="dayLabel" key={i}>{d}</th>)
+			return (
+				<thead>
+					<tr>
+						{days}
+					</tr>
+				</thead>
+			)
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		return (<table className="calendar" style={this.props.customStyle.calendar || {}}>
-					{this.getHeader(this.props.showControls)}{this.getWeeks(this.props.dates)}
+					{this.getHeader(this.props.showDaysLabels)}
+					{this.getCaption(this.props.showControls)}{this.getWeeks(this.props.dates)}
 				</table>);
 	}
 });

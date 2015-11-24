@@ -88,7 +88,7 @@ var Calendar = React.createClass({
 		}
 		return style;
 	},
-	getHeader: function getHeader(showControls) {
+	getCaption: function getCaption(showControls) {
 		var prev = "<";
 		var next = ">";
 		if (showControls) {
@@ -136,11 +136,34 @@ var Calendar = React.createClass({
 			return null;
 		}
 	},
+	getHeader: function getHeader(showHeader) {
+		if (showHeader) {
+			var days = this.props.daysLabels.map(function (d, i) {
+				return React.createElement(
+					"th",
+					{ className: "dayLabel", key: i },
+					d
+				);
+			});
+			return React.createElement(
+				"thead",
+				null,
+				React.createElement(
+					"tr",
+					null,
+					days
+				)
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function render() {
 		return React.createElement(
 			"table",
 			{ className: "calendar", style: this.props.customStyle.calendar || {} },
-			this.getHeader(this.props.showControls),
+			this.getHeader(this.props.showDaysLabels),
+			this.getCaption(this.props.showControls),
 			this.getWeeks(this.props.dates)
 		);
 	}

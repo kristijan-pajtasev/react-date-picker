@@ -70,11 +70,26 @@ For month names localization, you can pass monthLabels property.
 var labels = [...];
 ReactDOM.render(<Datepicker monthLabels={labels} />, document.getElementById("component"));
 ```
+For week days names you can pass daysLabels property with array of strings representing 
+days names as value. 
+```
+var labels = ["monday", "tuesday",...];
+ReactDOM.render(<Datepicker daysLabels={labels} />, document.getElementById("component"));
+```
+
+### Week days names
+Week names are enabled by default. If you want to remove them pass showDaysLabels 
+property with value false. Names are in table head element, each one in th element with 
+class dayLabel.
+
+```
+ReactDOM.render(<Datepicker showDaysLabels={false} />, document.getElementById("component"));
+```
 
 ## Styling
 Currently there are three ways of styling for date picker. You can use default which can be downloaded from 
 github in CSS or SASS format. This is not recomended because it is just some default format. You can add custom 
-style to directive as parameter or write your CSS. Last two methodes are described before. 
+style to directive as parameter or write your CSS. Last two methodes are described belowe. 
 
 ### Structure
 Whole component is in div element with class datepicker. Inside there are two elements in first depth level. 
@@ -82,7 +97,8 @@ Div with class header where is displayed selected date in format DD/MM/YYY. Next
 Inside we have caption with class controls which contains two divs (one for month changing and one for year 
 changing) with two more elements. Moving into past element with class prev and into future with class next. 
 Each week is table row with class week. Each day has class day. If day is not possible to be clicked it has 
-class disabled, and selected day has class selected.
+class disabled, and selected day has class selected. Week days names are in thead element. Each label is th 
+element and they are inside of one tr element. Each th element has dayLabel class.
 
 ### Styling as component parameter
 To add some style to part of component you can pass JSON object for styling as customStyle property.

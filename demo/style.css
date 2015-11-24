@@ -39,6 +39,9 @@
   right: 0;
   border-left: thin solid #c5d3e2;
 }
+.datepicker .calendar .dayLabel {
+  border: thin solid #c5d3e2;
+}
 .datepicker .calendar .week {
   width: 100%;
 }
