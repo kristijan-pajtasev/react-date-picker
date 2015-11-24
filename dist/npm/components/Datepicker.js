@@ -7,16 +7,18 @@ var Datepicker = React.createClass({
 
 	getInitialState: function getInitialState() {
 		var date = this.props.displayMonth || this.props.selectedDate || new Date();
-		var selectedDate = this.props.selectedDate;
+		var selectedDate = this.props.selectedDate || new Date();
 		var selectedMonth = selectedDate.getMonth();
 		var selectedYear = selectedDate.getFullYear();
 		var monthDays = CalendarUtil.calendar(new Date(date.getTime()));
 		var months = this.props.monthLabels || ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 		var minimumDate = this.props.minimumDate;
-		minimumDate.setHours(0);
-		minimumDate.setMinutes(0);
-		minimumDate.setSeconds(0);
-		minimumDate.setMilliseconds(0);
+		if (!!minimumDate) {
+			minimumDate.setHours(0);
+			minimumDate.setMinutes(0);
+			minimumDate.setSeconds(0);
+			minimumDate.setMilliseconds(0);
+		}
 		var showControls = this.props.showControls != undefined ? this.props.showControls : true;
 		var customStyle = this.props.customStyle || {};
 
@@ -32,7 +34,7 @@ var Datepicker = React.createClass({
 		};
 	},
 	changeMonth: function changeMonth(direction) {
-		var month = this.state.selectedMonth;
+		var month = this.state.monthDays[2][2].getMonth();
 		var year = this.state.selectedYear;
 		if (direction == 1) {
 			month += 1;
@@ -57,7 +59,7 @@ var Datepicker = React.createClass({
 		this.setState(newState);
 	},
 	changeYear: function changeYear(direction) {
-		var year = this.state.selectedYear + direction;
+		var year = this.state.monthDays[2][2].getFullYear() + direction;
 		var month = this.state.selectedMonth;
 		var newState = {
 			selectedMonth: month,

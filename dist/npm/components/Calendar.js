@@ -39,8 +39,7 @@ var Calendar = React.createClass({
 		return week.map(function (d, i) {
 
 			var classes = ["day"];
-			// let style=this.props.customStyle.day || {};
-			if (d.getMonth() != _this.props.selectedMonth) {
+			if (d.getMonth() != _this.props.dates[2][2].getMonth()) {
 				classes.push("disabled");
 			}
 
@@ -120,11 +119,11 @@ var Calendar = React.createClass({
 					React.createElement(
 						"div",
 						{ className: "prev", onClick: this.props.changeMonth.bind(null, -1),
-							style: this.props.customStyle.prev || {} },
+							style: this.props.dates[2][2].prev || {} },
 						prev
 					),
 					"Month: ",
-					this.state.selectedDay.getMonth() + 1,
+					this.props.dates[2][2].getMonth() + 1,
 					React.createElement(
 						"div",
 						{ className: "next", onClick: this.props.changeMonth.bind(null, 1),
