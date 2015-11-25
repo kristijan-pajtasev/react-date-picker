@@ -1,7 +1,5 @@
 # React Datepicker Component
 
-## This component is in progress. Do not use yet.
-
 ## Installing 
 
 ### npm
@@ -119,3 +117,9 @@ ReactDOM.render(<Datepicker customStyle={customStyle} />, document.getElementByI
 You can use this structure and usual CSS selectors for styling this component. So for styling day 
 element you can use .day selector or .day.selected for selected day. This is recomended usage 
 because like this you can use different pseudoselectors like :hover and you can use media queries.
+
+## Note
+
+This component is ready to use as npm module or as script which can be also find in 
+github repository. However, if you do find any issues, please do contact me. Also if you are using 
+it I would appreciate if you could let me know how it is working for you.
