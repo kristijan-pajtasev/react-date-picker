@@ -62,31 +62,18 @@ var Calendar = React.createClass({
 	},
 	getStyleForClasses: function getStyleForClasses(classes) {
 		var style = {};
-		if (classes.indexOf("day") >= 0) {
-			var dayStyle = this.props.customStyle.day || {};
-			var keys = Object.keys(dayStyle);
-			for (var i = 0, _length = keys.length; i < _length; i++) {
-				var _key = keys[i];
-				style[_key] = dayStyle[_key];
-			}
-		}
-		if (classes.indexOf("selected") >= 0) {
-			var selectedStyle = this.props.customStyle.selected || {};
-			var keys = Object.keys(selectedStyle);
-			for (var i = 0, _length2 = keys.length; i < _length2; i++) {
-				var _key2 = keys[i];
-				style[_key2] = selectedStyle[_key2];
-			}
-		}
-		if (classes.indexOf("disabled") >= 0) {
-			var disabledStyle = this.props.customStyle.disabled || {};
-			var keys = Object.keys(disabledStyle);
-			for (var i = 0, _length3 = keys.length; i < _length3; i++) {
-				var _key3 = keys[i];
-				style[_key3] = disabledStyle[_key3];
-			}
+		for (var i = 0, _length = classes.length; i < _length; i++) {
+			var klass = classes[i];
+			this.mergeStyleForClass(style, this.props.customStyle[klass] || {});
 		}
 		return style;
+	},
+	mergeStyleForClass: function mergeStyleForClass(style, styleForClass) {
+		var keys = Object.keys(styleForClass);
+		for (var i = 0, _length = keys.length; i < _length; i++) {
+			var _key = keys[i];
+			style[_key] = styleForClass[_key];
+		}
 	},
 	getCaption: function getCaption(showControls) {
 		var prev = "<";

@@ -2,6 +2,7 @@
   box-sizing: border-box;
 }
 .datepicker > .header {
+  display: block;
   width: 100%;
   border-left: thin solid #c5d3e2;
   border-right: thin solid #c5d3e2;

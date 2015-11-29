@@ -87,9 +87,9 @@ var Datepicker = React.createClass({
 								this.state.selectedYear;
 		}
 		return (<div className="datepicker" style={this.state.customStyle.datepicker || {}}>
-					<div className="header" style={this.state.customStyle.header || {}}> 
+					<label className="header" style={this.state.customStyle.header || {}}> 
 						{selectedDateLabel}
-					</div>
+					</label>
 					<Calendar
 						changeMonth={this.changeMonth} customStyle={this.state.customStyle}
 						changeYear={this.changeYear} showControls={this.state.showControls}

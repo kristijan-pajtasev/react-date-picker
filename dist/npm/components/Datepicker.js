@@ -88,7 +88,7 @@ var Datepicker = React.createClass({
 			"div",
 			{ className: "datepicker", style: this.state.customStyle.datepicker || {} },
 			React.createElement(
-				"div",
+				"label",
 				{ className: "header", style: this.state.customStyle.header || {} },
 				selectedDateLabel
 			),

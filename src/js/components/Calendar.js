@@ -44,31 +44,18 @@ var Calendar = React.createClass({
 	},
 	getStyleForClasses: function(classes) {
 		let style = {}
-		if(classes.indexOf('day') >= 0) {
-			let dayStyle = this.props.customStyle.day || {};
-			let keys = Object.keys(dayStyle);
-			for(let i = 0, length = keys.length; i < length; i++) {
-				let key = keys[i];
-				style[key] = dayStyle[key]
-			}
+		for(let i = 0, length = classes.length; i < length; i++) {
+			let klass = classes[i];
+			this.mergeStyleForClass(style, this.props.customStyle[klass] || {});
 		}
-		if(classes.indexOf('selected') >= 0) {
-			let selectedStyle = this.props.customStyle.selected || {};
-			let keys = Object.keys(selectedStyle);
-			for(let i = 0, length = keys.length; i < length; i++) {
-				let key = keys[i];
-				style[key] = selectedStyle[key]
-			}
-		} 
-		if(classes.indexOf('disabled') >= 0) {
-			let disabledStyle = this.props.customStyle.disabled || {};
-			let keys = Object.keys(disabledStyle);
-			for(let i = 0, length = keys.length; i < length; i++) {
-				let key = keys[i];
-				style[key] = disabledStyle[key]
-			}
-		} 
-		return style;
+		return style; 
+	},
+	mergeStyleForClass: function(style, styleForClass) {
+		let keys = Object.keys(styleForClass);
+		for(let i = 0, length = keys.length; i < length; i++) {
+			let key = keys[i];
+			style[key] = styleForClass[key] 
+		}
 	},
 	getCaption: function(showControls) {
 		let prev = '<';
