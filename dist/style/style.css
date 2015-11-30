@@ -1,14 +1,18 @@
+.datepicker {
+  position: relative;
+}
 .datepicker * {
   box-sizing: border-box;
 }
 .datepicker > .header {
   display: block;
   width: 100%;
-  border-left: thin solid #c5d3e2;
-  border-right: thin solid #c5d3e2;
-  border-top: thin solid #c5d3e2;
+  border: thin solid #c5d3e2;
   text-align: center;
   padding: 0.5em;
+}
+.datepicker > .header.inline {
+  cursor: pointer;
 }
 .datepicker .calendar {
   width: 100%;
@@ -22,6 +26,9 @@
   border-top: thin solid #c5d3e2;
   position: relative;
   padding: 0.5em;
+}
+.datepicker .calendar .controls > div:first-of-type {
+  border-top: none;
 }
 .datepicker .calendar .controls > div > div {
   background: white;

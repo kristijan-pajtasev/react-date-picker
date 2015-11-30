@@ -26,6 +26,7 @@ var Datepicker = React.createClass({
 		var daysLabels = this.props.daysLabels || 
 			["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
 			"Saturday", "Sunday"];
+		var isInline = this.props.isInline ? true : false;
 
 		return {
 				monthDays: monthDays,
@@ -37,7 +38,9 @@ var Datepicker = React.createClass({
 				showControls: showControls,
 				customStyle: customStyle,
 				showDaysLabels: showDaysLabels,
-				daysLabels: daysLabels
+				daysLabels: daysLabels,
+				isInline: isInline,
+				display: isInline ? false : true
 			 	};
 	},
 	changeMonth: function(direction) {
@@ -76,8 +79,27 @@ var Datepicker = React.createClass({
 		this.setState(newState);
 	},
 	onChange: function(day) {
-		this.setState({ selectedDay: day });
+		var display = this.state.isInline ? false : true;
+		this.setState({ selectedDay: day, display: display });
 		if(!!this.props.onChange) { this.props.onChange(day); }
+	},
+	getCalendar: function(display) {
+		if(display) {
+			return	<Calendar style={display}
+				changeMonth={this.changeMonth} customStyle={this.state.customStyle}
+				changeYear={this.changeYear} showControls={this.state.showControls}
+				showDaysLabels={this.state.showDaysLabels} daysLabels={this.state.daysLabels}
+				minimumDate={this.state.minimumDate} onChange={this.onChange} 
+				selectedDay={this.state.selectedDay} 
+				dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
+		} else {
+			return null;
+		}
+	},
+	toggleVisibility: function() {
+		if(this.state.isInline) {
+			this.setState({display: !this.state.display});
+		}
 	},
 	render: function() {
 		var selectedDateLabel = 'DD/MM/YYYY'; 
@@ -86,15 +108,20 @@ var Datepicker = React.createClass({
 								(this.state.selectedMonth + 1) + "/" +
 								this.state.selectedYear;
 		}
+		var inlineStyle = null;
+		if(this.state.isInline) { 
+			inlineStyle = "label.header~.calendar { position: absolute; width: 100%; height: auto; " 
+				+ "left: 0; top: 100%;}"
+		}
+
 		return (<div className="datepicker" style={this.state.customStyle.datepicker || {}}>
-					<label className="header" style={this.state.customStyle.header || {}}> 
+					<style type="text/css">{inlineStyle}</style>
+					<label onClick={this.toggleVisibility} 
+						className={this.state.isInline ? "header inline" : "header"} 
+						style={this.state.customStyle.header || {}}> 
 						{selectedDateLabel}
 					</label>
-					<Calendar
-						changeMonth={this.changeMonth} customStyle={this.state.customStyle}
-						changeYear={this.changeYear} showControls={this.state.showControls}
-						showDaysLabels={this.state.showDaysLabels} daysLabels={this.state.daysLabels}
-						minimumDate={this.state.minimumDate} onChange={this.onChange} selectedDay={this.state.selectedDay} dates={this.state.monthDays} selectedMonth={this.state.selectedMonth} />
+					{this.getCalendar(this.state.display)}
 				</div>);
 	}
 })

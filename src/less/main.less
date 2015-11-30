@@ -8,6 +8,8 @@
 @selected-text-color: #C5D3E2;
 
 .datepicker {
+	position: relative;
+
 	* {
 		box-sizing: border-box;
 	}
@@ -15,11 +17,12 @@
 	>.header {
 		display: block;
 		width: 100%;
-		border-left: thin solid @border-color;
-		border-right: thin solid @border-color;
-		border-top: thin solid @border-color;
+		border: thin solid @border-color;
 		text-align: center;
 		padding: @day-padding;
+		&.inline {
+			cursor: pointer;
+		}
 	}
 
 	.calendar {
@@ -36,6 +39,10 @@
 				border-top: thin solid @border-color;
 				position: relative;
 				padding: @day-padding;
+
+				&:first-of-type {
+					border-top: none;
+				}
 
 				>div {
 					background: white;

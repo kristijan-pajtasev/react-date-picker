@@ -82,6 +82,7 @@
 
 			var showDaysLabels = this.props.showDaysLabels !== undefined ? this.props.showDaysLabels : true;
 			var daysLabels = this.props.daysLabels || ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+			var isInline = this.props.isInline ? true : false;
 
 			return {
 				monthDays: monthDays,
@@ -93,7 +94,9 @@
 				showControls: showControls,
 				customStyle: customStyle,
 				showDaysLabels: showDaysLabels,
-				daysLabels: daysLabels
+				daysLabels: daysLabels,
+				isInline: isInline,
+				display: isInline ? false : true
 			};
 		},
 		changeMonth: function changeMonth(direction) {
@@ -132,9 +135,28 @@
 			this.setState(newState);
 		},
 		onChange: function onChange(day) {
-			this.setState({ selectedDay: day });
+			var display = this.state.isInline ? false : true;
+			this.setState({ selectedDay: day, display: display });
 			if (!!this.props.onChange) {
 				this.props.onChange(day);
+			}
+		},
+		getCalendar: function getCalendar(display) {
+			if (display) {
+				return React.createElement(Calendar, { style: display,
+					changeMonth: this.changeMonth, customStyle: this.state.customStyle,
+					changeYear: this.changeYear, showControls: this.state.showControls,
+					showDaysLabels: this.state.showDaysLabels, daysLabels: this.state.daysLabels,
+					minimumDate: this.state.minimumDate, onChange: this.onChange,
+					selectedDay: this.state.selectedDay,
+					dates: this.state.monthDays, selectedMonth: this.state.selectedMonth });
+			} else {
+				return null;
+			}
+		},
+		toggleVisibility: function toggleVisibility() {
+			if (this.state.isInline) {
+				this.setState({ display: !this.state.display });
 			}
 		},
 		render: function render() {
@@ -142,19 +164,27 @@
 			if (!!this.state.selectedDay) {
 				selectedDateLabel = this.state.selectedDay.getDate() + "/" + (this.state.selectedMonth + 1) + "/" + this.state.selectedYear;
 			}
+			var inlineStyle = null;
+			if (this.state.isInline) {
+				inlineStyle = "label.header~.calendar { position: absolute; width: 100%; height: auto; " + "left: 0; top: 100%;}";
+			}
+
 			return React.createElement(
 				"div",
 				{ className: "datepicker", style: this.state.customStyle.datepicker || {} },
 				React.createElement(
+					"style",
+					{ type: "text/css" },
+					inlineStyle
+				),
+				React.createElement(
 					"label",
-					{ className: "header", style: this.state.customStyle.header || {} },
+					{ onClick: this.toggleVisibility,
+						className: this.state.isInline ? "header inline" : "header",
+						style: this.state.customStyle.header || {} },
 					selectedDateLabel
 				),
-				React.createElement(Calendar, {
-					changeMonth: this.changeMonth, customStyle: this.state.customStyle,
-					changeYear: this.changeYear, showControls: this.state.showControls,
-					showDaysLabels: this.state.showDaysLabels, daysLabels: this.state.daysLabels,
-					minimumDate: this.state.minimumDate, onChange: this.onChange, selectedDay: this.state.selectedDay, dates: this.state.monthDays, selectedMonth: this.state.selectedMonth })
+				this.getCalendar(this.state.display)
 			);
 		}
 	});
@@ -531,7 +561,7 @@
 	'use strict';
 
 	var ReactDefaultInjection = __webpack_require__(14);
-	var ReactServerRendering = __webpack_require__(31);
+	var ReactServerRendering = __webpack_require__(23);
 	var ReactVersion = __webpack_require__(20);
 
 	ReactDefaultInjection.inject();
@@ -561,17 +591,17 @@
 
 	'use strict';
 
-	var ReactChildren = __webpack_require__(23);
-	var ReactComponent = __webpack_require__(24);
-	var ReactClass = __webpack_require__(25);
-	var ReactDOMFactories = __webpack_require__(26);
-	var ReactElement = __webpack_require__(27);
-	var ReactElementValidator = __webpack_require__(28);
-	var ReactPropTypes = __webpack_require__(29);
+	var ReactChildren = __webpack_require__(24);
+	var ReactComponent = __webpack_require__(25);
+	var ReactClass = __webpack_require__(26);
+	var ReactDOMFactories = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
+	var ReactElementValidator = __webpack_require__(29);
+	var ReactPropTypes = __webpack_require__(30);
 	var ReactVersion = __webpack_require__(20);
 
 	var assign = __webpack_require__(10);
-	var onlyChild = __webpack_require__(30);
+	var onlyChild = __webpack_require__(31);
 
 	var createElement = ReactElement.createElement;
 	var createFactory = ReactElement.createFactory;
@@ -1330,7 +1360,7 @@
 	var ReactBrowserEventEmitter = __webpack_require__(58);
 	var ReactCurrentOwner = __webpack_require__(12);
 	var ReactDOMFeatureFlags = __webpack_require__(59);
-	var ReactElement = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
 	var ReactEmptyComponentRegistry = __webpack_require__(60);
 	var ReactInstanceHandles = __webpack_require__(15);
 	var ReactInstanceMap = __webpack_require__(61);
@@ -2707,6 +2737,95 @@
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks static-only
+	 * @providesModule ReactServerRendering
+	 */
+	'use strict';
+
+	var ReactDefaultBatchingStrategy = __webpack_require__(46);
+	var ReactElement = __webpack_require__(28);
+	var ReactInstanceHandles = __webpack_require__(15);
+	var ReactMarkupChecksum = __webpack_require__(62);
+	var ReactServerBatchingStrategy = __webpack_require__(76);
+	var ReactServerRenderingTransaction = __webpack_require__(77);
+	var ReactUpdates = __webpack_require__(19);
+
+	var emptyObject = __webpack_require__(74);
+	var instantiateReactComponent = __webpack_require__(64);
+	var invariant = __webpack_require__(73);
+
+	/**
+	 * @param {ReactElement} element
+	 * @return {string} the HTML markup
+	 */
+	function renderToString(element) {
+	  !ReactElement.isValidElement(element) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'renderToString(): You must pass a valid ReactElement.') : invariant(false) : undefined;
+
+	  var transaction;
+	  try {
+	    ReactUpdates.injection.injectBatchingStrategy(ReactServerBatchingStrategy);
+
+	    var id = ReactInstanceHandles.createReactRootID();
+	    transaction = ReactServerRenderingTransaction.getPooled(false);
+
+	    return transaction.perform(function () {
+	      var componentInstance = instantiateReactComponent(element, null);
+	      var markup = componentInstance.mountComponent(id, transaction, emptyObject);
+	      return ReactMarkupChecksum.addChecksumToMarkup(markup);
+	    }, null);
+	  } finally {
+	    ReactServerRenderingTransaction.release(transaction);
+	    // Revert to the DOM batching strategy since these two renderers
+	    // currently share these stateful modules.
+	    ReactUpdates.injection.injectBatchingStrategy(ReactDefaultBatchingStrategy);
+	  }
+	}
+
+	/**
+	 * @param {ReactElement} element
+	 * @return {string} the HTML markup, without the extra React ID and checksum
+	 * (for generating static pages)
+	 */
+	function renderToStaticMarkup(element) {
+	  !ReactElement.isValidElement(element) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'renderToStaticMarkup(): You must pass a valid ReactElement.') : invariant(false) : undefined;
+
+	  var transaction;
+	  try {
+	    ReactUpdates.injection.injectBatchingStrategy(ReactServerBatchingStrategy);
+
+	    var id = ReactInstanceHandles.createReactRootID();
+	    transaction = ReactServerRenderingTransaction.getPooled(true);
+
+	    return transaction.perform(function () {
+	      var componentInstance = instantiateReactComponent(element, null);
+	      return componentInstance.mountComponent(id, transaction, emptyObject);
+	    }, null);
+	  } finally {
+	    ReactServerRenderingTransaction.release(transaction);
+	    // Revert to the DOM batching strategy since these two renderers
+	    // currently share these stateful modules.
+	    ReactUpdates.injection.injectBatchingStrategy(ReactDefaultBatchingStrategy);
+	  }
+	}
+
+	module.exports = {
+	  renderToString: renderToString,
+	  renderToStaticMarkup: renderToStaticMarkup
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/**
 	 * Copyright 2013-2015, Facebook, Inc.
 	 * All rights reserved.
@@ -2721,10 +2840,10 @@
 	'use strict';
 
 	var PooledClass = __webpack_require__(69);
-	var ReactElement = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
 
-	var emptyFunction = __webpack_require__(76);
-	var traverseAllChildren = __webpack_require__(77);
+	var emptyFunction = __webpack_require__(78);
+	var traverseAllChildren = __webpack_require__(79);
 
 	var twoArgumentPooler = PooledClass.twoArgumentPooler;
 	var fourArgumentPooler = PooledClass.fourArgumentPooler;
@@ -2891,7 +3010,7 @@
 	module.exports = ReactChildren;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -2907,9 +3026,9 @@
 
 	'use strict';
 
-	var ReactNoopUpdateQueue = __webpack_require__(78);
+	var ReactNoopUpdateQueue = __webpack_require__(80);
 
-	var canDefineProperty = __webpack_require__(79);
+	var canDefineProperty = __webpack_require__(81);
 	var emptyObject = __webpack_require__(74);
 	var invariant = __webpack_require__(73);
 	var warning = __webpack_require__(71);
@@ -3019,7 +3138,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3035,17 +3154,17 @@
 
 	'use strict';
 
-	var ReactComponent = __webpack_require__(24);
-	var ReactElement = __webpack_require__(27);
-	var ReactPropTypeLocations = __webpack_require__(81);
-	var ReactPropTypeLocationNames = __webpack_require__(82);
-	var ReactNoopUpdateQueue = __webpack_require__(78);
+	var ReactComponent = __webpack_require__(25);
+	var ReactElement = __webpack_require__(28);
+	var ReactPropTypeLocations = __webpack_require__(82);
+	var ReactPropTypeLocationNames = __webpack_require__(83);
+	var ReactNoopUpdateQueue = __webpack_require__(80);
 
 	var assign = __webpack_require__(10);
 	var emptyObject = __webpack_require__(74);
 	var invariant = __webpack_require__(73);
-	var keyMirror = __webpack_require__(83);
-	var keyOf = __webpack_require__(84);
+	var keyMirror = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 	var warning = __webpack_require__(71);
 
 	var MIXINS_KEY = keyOf({ mixins: null });
@@ -3796,7 +3915,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3813,10 +3932,10 @@
 
 	'use strict';
 
-	var ReactElement = __webpack_require__(27);
-	var ReactElementValidator = __webpack_require__(28);
+	var ReactElement = __webpack_require__(28);
+	var ReactElementValidator = __webpack_require__(29);
 
-	var mapObject = __webpack_require__(80);
+	var mapObject = __webpack_require__(86);
 
 	/**
 	 * Create a factory that creates HTML tag elements.
@@ -3979,7 +4098,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3998,7 +4117,7 @@
 	var ReactCurrentOwner = __webpack_require__(12);
 
 	var assign = __webpack_require__(10);
-	var canDefineProperty = __webpack_require__(79);
+	var canDefineProperty = __webpack_require__(81);
 
 	// The Symbol used to tag the ReactElement type. If there is no native Symbol
 	// nor polyfill, then a plain number is used for performance.
@@ -4232,7 +4351,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4255,13 +4374,13 @@
 
 	'use strict';
 
-	var ReactElement = __webpack_require__(27);
-	var ReactPropTypeLocations = __webpack_require__(81);
-	var ReactPropTypeLocationNames = __webpack_require__(82);
+	var ReactElement = __webpack_require__(28);
+	var ReactPropTypeLocations = __webpack_require__(82);
+	var ReactPropTypeLocationNames = __webpack_require__(83);
 	var ReactCurrentOwner = __webpack_require__(12);
 
-	var canDefineProperty = __webpack_require__(79);
-	var getIteratorFn = __webpack_require__(85);
+	var canDefineProperty = __webpack_require__(81);
+	var getIteratorFn = __webpack_require__(87);
 	var invariant = __webpack_require__(73);
 	var warning = __webpack_require__(71);
 
@@ -4519,7 +4638,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4535,11 +4654,11 @@
 
 	'use strict';
 
-	var ReactElement = __webpack_require__(27);
-	var ReactPropTypeLocationNames = __webpack_require__(82);
+	var ReactElement = __webpack_require__(28);
+	var ReactPropTypeLocationNames = __webpack_require__(83);
 
-	var emptyFunction = __webpack_require__(76);
-	var getIteratorFn = __webpack_require__(85);
+	var emptyFunction = __webpack_require__(78);
+	var getIteratorFn = __webpack_require__(87);
 
 	/**
 	 * Collection of methods that allow declaration and validation of props that are
@@ -4880,7 +4999,7 @@
 	module.exports = ReactPropTypes;
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4895,7 +5014,7 @@
 	 */
 	'use strict';
 
-	var ReactElement = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
 
 	var invariant = __webpack_require__(73);
 
@@ -4916,95 +5035,6 @@
 	}
 
 	module.exports = onlyChild;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @typechecks static-only
-	 * @providesModule ReactServerRendering
-	 */
-	'use strict';
-
-	var ReactDefaultBatchingStrategy = __webpack_require__(46);
-	var ReactElement = __webpack_require__(27);
-	var ReactInstanceHandles = __webpack_require__(15);
-	var ReactMarkupChecksum = __webpack_require__(62);
-	var ReactServerBatchingStrategy = __webpack_require__(86);
-	var ReactServerRenderingTransaction = __webpack_require__(87);
-	var ReactUpdates = __webpack_require__(19);
-
-	var emptyObject = __webpack_require__(74);
-	var instantiateReactComponent = __webpack_require__(64);
-	var invariant = __webpack_require__(73);
-
-	/**
-	 * @param {ReactElement} element
-	 * @return {string} the HTML markup
-	 */
-	function renderToString(element) {
-	  !ReactElement.isValidElement(element) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'renderToString(): You must pass a valid ReactElement.') : invariant(false) : undefined;
-
-	  var transaction;
-	  try {
-	    ReactUpdates.injection.injectBatchingStrategy(ReactServerBatchingStrategy);
-
-	    var id = ReactInstanceHandles.createReactRootID();
-	    transaction = ReactServerRenderingTransaction.getPooled(false);
-
-	    return transaction.perform(function () {
-	      var componentInstance = instantiateReactComponent(element, null);
-	      var markup = componentInstance.mountComponent(id, transaction, emptyObject);
-	      return ReactMarkupChecksum.addChecksumToMarkup(markup);
-	    }, null);
-	  } finally {
-	    ReactServerRenderingTransaction.release(transaction);
-	    // Revert to the DOM batching strategy since these two renderers
-	    // currently share these stateful modules.
-	    ReactUpdates.injection.injectBatchingStrategy(ReactDefaultBatchingStrategy);
-	  }
-	}
-
-	/**
-	 * @param {ReactElement} element
-	 * @return {string} the HTML markup, without the extra React ID and checksum
-	 * (for generating static pages)
-	 */
-	function renderToStaticMarkup(element) {
-	  !ReactElement.isValidElement(element) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'renderToStaticMarkup(): You must pass a valid ReactElement.') : invariant(false) : undefined;
-
-	  var transaction;
-	  try {
-	    ReactUpdates.injection.injectBatchingStrategy(ReactServerBatchingStrategy);
-
-	    var id = ReactInstanceHandles.createReactRootID();
-	    transaction = ReactServerRenderingTransaction.getPooled(true);
-
-	    return transaction.perform(function () {
-	      var componentInstance = instantiateReactComponent(element, null);
-	      return componentInstance.mountComponent(id, transaction, emptyObject);
-	    }, null);
-	  } finally {
-	    ReactServerRenderingTransaction.release(transaction);
-	    // Revert to the DOM batching strategy since these two renderers
-	    // currently share these stateful modules.
-	    ReactUpdates.injection.injectBatchingStrategy(ReactDefaultBatchingStrategy);
-	  }
-	}
-
-	module.exports = {
-	  renderToString: renderToString,
-	  renderToStaticMarkup: renderToStaticMarkup
-	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
@@ -5227,7 +5257,7 @@
 	var DOMProperty = __webpack_require__(57);
 	var ReactPerf = __webpack_require__(17);
 
-	var quoteAttributeValueForBrowser = __webpack_require__(91);
+	var quoteAttributeValueForBrowser = __webpack_require__(90);
 	var warning = __webpack_require__(71);
 
 	// Simplified subset
@@ -5454,7 +5484,7 @@
 
 	'use strict';
 
-	var ReactDOMIDOperations = __webpack_require__(90);
+	var ReactDOMIDOperations = __webpack_require__(91);
 	var ReactMount = __webpack_require__(16);
 
 	/**
@@ -5589,7 +5619,7 @@
 	'use strict';
 
 	var assign = __webpack_require__(10);
-	var emptyFunction = __webpack_require__(76);
+	var emptyFunction = __webpack_require__(78);
 	var warning = __webpack_require__(71);
 
 	var validateDOMNesting = emptyFunction;
@@ -5965,7 +5995,7 @@
 	var SyntheticCompositionEvent = __webpack_require__(95);
 	var SyntheticInputEvent = __webpack_require__(96);
 
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 
 	var END_KEYCODES = [9, 13, 27, 32]; // Tab, Return, Esc, Space
 	var START_KEYCODE = 229;
@@ -6377,7 +6407,7 @@
 	var getEventTarget = __webpack_require__(99);
 	var isEventSupported = __webpack_require__(100);
 	var isTextInputElement = __webpack_require__(101);
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -6721,7 +6751,7 @@
 
 	'use strict';
 
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 
 	/**
 	 * Module that is injectable into `EventPluginHub`, that specifies a
@@ -6759,7 +6789,7 @@
 	var SyntheticMouseEvent = __webpack_require__(102);
 
 	var ReactMount = __webpack_require__(16);
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 	var getFirstReactDOM = ReactMount.getFirstReactDOM;
@@ -7163,7 +7193,7 @@
 	var Transaction = __webpack_require__(70);
 
 	var assign = __webpack_require__(10);
-	var emptyFunction = __webpack_require__(76);
+	var emptyFunction = __webpack_require__(78);
 
 	var RESET_BATCHED_UPDATES = {
 	  initialize: emptyFunction,
@@ -7252,11 +7282,11 @@
 	var ReactUpdateQueue = __webpack_require__(63);
 
 	var assign = __webpack_require__(10);
-	var canDefineProperty = __webpack_require__(79);
+	var canDefineProperty = __webpack_require__(81);
 	var escapeTextContentForBrowser = __webpack_require__(36);
 	var invariant = __webpack_require__(73);
 	var isEventSupported = __webpack_require__(100);
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 	var setInnerHTML = __webpack_require__(65);
 	var setTextContent = __webpack_require__(37);
 	var shallowEqual = __webpack_require__(111);
@@ -8418,7 +8448,7 @@
 	var DOMProperty = __webpack_require__(57);
 	var EventPluginHub = __webpack_require__(97);
 	var ReactComponentEnvironment = __webpack_require__(114);
-	var ReactClass = __webpack_require__(25);
+	var ReactClass = __webpack_require__(26);
 	var ReactEmptyComponent = __webpack_require__(115);
 	var ReactBrowserEventEmitter = __webpack_require__(58);
 	var ReactNativeComponent = __webpack_require__(116);
@@ -8622,7 +8652,7 @@
 
 	var getActiveElement = __webpack_require__(118);
 	var isTextInputElement = __webpack_require__(101);
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 	var shallowEqual = __webpack_require__(111);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
@@ -8868,10 +8898,10 @@
 	var SyntheticUIEvent = __webpack_require__(124);
 	var SyntheticWheelEvent = __webpack_require__(125);
 
-	var emptyFunction = __webpack_require__(76);
+	var emptyFunction = __webpack_require__(78);
 	var getEventCharCode = __webpack_require__(126);
 	var invariant = __webpack_require__(73);
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -10603,7 +10633,7 @@
 	'use strict';
 
 	var ReactCurrentOwner = __webpack_require__(12);
-	var ReactElement = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
 	var ReactInstanceMap = __webpack_require__(61);
 	var ReactUpdates = __webpack_require__(19);
 
@@ -11670,7 +11700,7 @@
 
 	'use strict';
 
-	var emptyFunction = __webpack_require__(76);
+	var emptyFunction = __webpack_require__(78);
 
 	/**
 	 * Similar to invariant but only logs a warning if the condition is not met.
@@ -11903,6 +11933,126 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
+	 * Copyright 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactServerBatchingStrategy
+	 * @typechecks
+	 */
+
+	'use strict';
+
+	var ReactServerBatchingStrategy = {
+	  isBatchingUpdates: false,
+	  batchedUpdates: function (callback) {
+	    // Don't do anything here. During the server rendering we don't want to
+	    // schedule any updates. We will simply ignore them.
+	  }
+	};
+
+	module.exports = ReactServerBatchingStrategy;
+
+/***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactServerRenderingTransaction
+	 * @typechecks
+	 */
+
+	'use strict';
+
+	var PooledClass = __webpack_require__(69);
+	var CallbackQueue = __webpack_require__(68);
+	var Transaction = __webpack_require__(70);
+
+	var assign = __webpack_require__(10);
+	var emptyFunction = __webpack_require__(78);
+
+	/**
+	 * Provides a `CallbackQueue` queue for collecting `onDOMReady` callbacks
+	 * during the performing of the transaction.
+	 */
+	var ON_DOM_READY_QUEUEING = {
+	  /**
+	   * Initializes the internal `onDOMReady` queue.
+	   */
+	  initialize: function () {
+	    this.reactMountReady.reset();
+	  },
+
+	  close: emptyFunction
+	};
+
+	/**
+	 * Executed within the scope of the `Transaction` instance. Consider these as
+	 * being member methods, but with an implied ordering while being isolated from
+	 * each other.
+	 */
+	var TRANSACTION_WRAPPERS = [ON_DOM_READY_QUEUEING];
+
+	/**
+	 * @class ReactServerRenderingTransaction
+	 * @param {boolean} renderToStaticMarkup
+	 */
+	function ReactServerRenderingTransaction(renderToStaticMarkup) {
+	  this.reinitializeTransaction();
+	  this.renderToStaticMarkup = renderToStaticMarkup;
+	  this.reactMountReady = CallbackQueue.getPooled(null);
+	  this.useCreateElement = false;
+	}
+
+	var Mixin = {
+	  /**
+	   * @see Transaction
+	   * @abstract
+	   * @final
+	   * @return {array} Empty list of operation wrap procedures.
+	   */
+	  getTransactionWrappers: function () {
+	    return TRANSACTION_WRAPPERS;
+	  },
+
+	  /**
+	   * @return {object} The queue to collect `onDOMReady` callbacks with.
+	   */
+	  getReactMountReady: function () {
+	    return this.reactMountReady;
+	  },
+
+	  /**
+	   * `PooledClass` looks for this, and will invoke this before allowing this
+	   * instance to be reused.
+	   */
+	  destructor: function () {
+	    CallbackQueue.release(this.reactMountReady);
+	    this.reactMountReady = null;
+	  }
+	};
+
+	assign(ReactServerRenderingTransaction.prototype, Transaction.Mixin, Mixin);
+
+	PooledClass.addPoolingTo(ReactServerRenderingTransaction);
+
+	module.exports = ReactServerRenderingTransaction;
+
+/***/ },
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
 	 * Copyright 2013-2015, Facebook, Inc.
 	 * All rights reserved.
 	 *
@@ -11942,7 +12092,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 77 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -11959,10 +12109,10 @@
 	'use strict';
 
 	var ReactCurrentOwner = __webpack_require__(12);
-	var ReactElement = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
 	var ReactInstanceHandles = __webpack_require__(15);
 
-	var getIteratorFn = __webpack_require__(85);
+	var getIteratorFn = __webpack_require__(87);
 	var invariant = __webpack_require__(73);
 	var warning = __webpack_require__(71);
 
@@ -12137,7 +12287,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 78 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -12261,7 +12411,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 79 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -12291,7 +12441,158 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 80 */
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactPropTypeLocations
+	 */
+
+	'use strict';
+
+	var keyMirror = __webpack_require__(84);
+
+	var ReactPropTypeLocations = keyMirror({
+	  prop: null,
+	  context: null,
+	  childContext: null
+	});
+
+	module.exports = ReactPropTypeLocations;
+
+/***/ },
+/* 83 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactPropTypeLocationNames
+	 */
+
+	'use strict';
+
+	var ReactPropTypeLocationNames = {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  ReactPropTypeLocationNames = {
+	    prop: 'prop',
+	    context: 'context',
+	    childContext: 'child context'
+	  };
+	}
+
+	module.exports = ReactPropTypeLocationNames;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
+
+/***/ },
+/* 84 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule keyMirror
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	var invariant = __webpack_require__(73);
+
+	/**
+	 * Constructs an enumeration with keys equal to their value.
+	 *
+	 * For example:
+	 *
+	 *   var COLORS = keyMirror({blue: null, red: null});
+	 *   var myColor = COLORS.blue;
+	 *   var isColorValid = !!COLORS[myColor];
+	 *
+	 * The last line could not be performed if the values of the generated enum were
+	 * not equal to their keys.
+	 *
+	 *   Input:  {key1: val1, key2: val2}
+	 *   Output: {key1: key1, key2: key2}
+	 *
+	 * @param {object} obj
+	 * @return {object}
+	 */
+	var keyMirror = function (obj) {
+	  var ret = {};
+	  var key;
+	  !(obj instanceof Object && !Array.isArray(obj)) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'keyMirror(...): Argument must be an object.') : invariant(false) : undefined;
+	  for (key in obj) {
+	    if (!obj.hasOwnProperty(key)) {
+	      continue;
+	    }
+	    ret[key] = key;
+	  }
+	  return ret;
+	};
+
+	module.exports = keyMirror;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule keyOf
+	 */
+
+	/**
+	 * Allows extraction of a minified key. Let's the build system minify keys
+	 * without losing the ability to dynamically use key strings as values
+	 * themselves. Pass in an object with a single key/val pair and it will return
+	 * you the string key of that single record. Suppose you want to grab the
+	 * value for a key 'className' inside of an object. Key/val minification may
+	 * have aliased that key to be 'xa12'. keyOf({className: null}) will return
+	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
+	 * reuse those resolutions.
+	 */
+	"use strict";
+
+	var keyOf = function (oneKeyObj) {
+	  var key;
+	  for (key in oneKeyObj) {
+	    if (!oneKeyObj.hasOwnProperty(key)) {
+	      continue;
+	    }
+	    return key;
+	  }
+	  return null;
+	};
+
+	module.exports = keyOf;
+
+/***/ },
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12347,158 +12648,7 @@
 	module.exports = mapObject;
 
 /***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactPropTypeLocations
-	 */
-
-	'use strict';
-
-	var keyMirror = __webpack_require__(83);
-
-	var ReactPropTypeLocations = keyMirror({
-	  prop: null,
-	  context: null,
-	  childContext: null
-	});
-
-	module.exports = ReactPropTypeLocations;
-
-/***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactPropTypeLocationNames
-	 */
-
-	'use strict';
-
-	var ReactPropTypeLocationNames = {};
-
-	if (process.env.NODE_ENV !== 'production') {
-	  ReactPropTypeLocationNames = {
-	    prop: 'prop',
-	    context: 'context',
-	    childContext: 'child context'
-	  };
-	}
-
-	module.exports = ReactPropTypeLocationNames;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
-
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule keyMirror
-	 * @typechecks static-only
-	 */
-
-	'use strict';
-
-	var invariant = __webpack_require__(73);
-
-	/**
-	 * Constructs an enumeration with keys equal to their value.
-	 *
-	 * For example:
-	 *
-	 *   var COLORS = keyMirror({blue: null, red: null});
-	 *   var myColor = COLORS.blue;
-	 *   var isColorValid = !!COLORS[myColor];
-	 *
-	 * The last line could not be performed if the values of the generated enum were
-	 * not equal to their keys.
-	 *
-	 *   Input:  {key1: val1, key2: val2}
-	 *   Output: {key1: key1, key2: key2}
-	 *
-	 * @param {object} obj
-	 * @return {object}
-	 */
-	var keyMirror = function (obj) {
-	  var ret = {};
-	  var key;
-	  !(obj instanceof Object && !Array.isArray(obj)) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'keyMirror(...): Argument must be an object.') : invariant(false) : undefined;
-	  for (key in obj) {
-	    if (!obj.hasOwnProperty(key)) {
-	      continue;
-	    }
-	    ret[key] = key;
-	  }
-	  return ret;
-	};
-
-	module.exports = keyMirror;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
-
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule keyOf
-	 */
-
-	/**
-	 * Allows extraction of a minified key. Let's the build system minify keys
-	 * without losing the ability to dynamically use key strings as values
-	 * themselves. Pass in an object with a single key/val pair and it will return
-	 * you the string key of that single record. Suppose you want to grab the
-	 * value for a key 'className' inside of an object. Key/val minification may
-	 * have aliased that key to be 'xa12'. keyOf({className: null}) will return
-	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
-	 * reuse those resolutions.
-	 */
-	"use strict";
-
-	var keyOf = function (oneKeyObj) {
-	  var key;
-	  for (key in oneKeyObj) {
-	    if (!oneKeyObj.hasOwnProperty(key)) {
-	      continue;
-	    }
-	    return key;
-	  }
-	  return null;
-	};
-
-	module.exports = keyOf;
-
-/***/ },
-/* 85 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12543,126 +12693,6 @@
 	module.exports = getIteratorFn;
 
 /***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactServerBatchingStrategy
-	 * @typechecks
-	 */
-
-	'use strict';
-
-	var ReactServerBatchingStrategy = {
-	  isBatchingUpdates: false,
-	  batchedUpdates: function (callback) {
-	    // Don't do anything here. During the server rendering we don't want to
-	    // schedule any updates. We will simply ignore them.
-	  }
-	};
-
-	module.exports = ReactServerBatchingStrategy;
-
-/***/ },
-/* 87 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactServerRenderingTransaction
-	 * @typechecks
-	 */
-
-	'use strict';
-
-	var PooledClass = __webpack_require__(69);
-	var CallbackQueue = __webpack_require__(68);
-	var Transaction = __webpack_require__(70);
-
-	var assign = __webpack_require__(10);
-	var emptyFunction = __webpack_require__(76);
-
-	/**
-	 * Provides a `CallbackQueue` queue for collecting `onDOMReady` callbacks
-	 * during the performing of the transaction.
-	 */
-	var ON_DOM_READY_QUEUEING = {
-	  /**
-	   * Initializes the internal `onDOMReady` queue.
-	   */
-	  initialize: function () {
-	    this.reactMountReady.reset();
-	  },
-
-	  close: emptyFunction
-	};
-
-	/**
-	 * Executed within the scope of the `Transaction` instance. Consider these as
-	 * being member methods, but with an implied ordering while being isolated from
-	 * each other.
-	 */
-	var TRANSACTION_WRAPPERS = [ON_DOM_READY_QUEUEING];
-
-	/**
-	 * @class ReactServerRenderingTransaction
-	 * @param {boolean} renderToStaticMarkup
-	 */
-	function ReactServerRenderingTransaction(renderToStaticMarkup) {
-	  this.reinitializeTransaction();
-	  this.renderToStaticMarkup = renderToStaticMarkup;
-	  this.reactMountReady = CallbackQueue.getPooled(null);
-	  this.useCreateElement = false;
-	}
-
-	var Mixin = {
-	  /**
-	   * @see Transaction
-	   * @abstract
-	   * @final
-	   * @return {array} Empty list of operation wrap procedures.
-	   */
-	  getTransactionWrappers: function () {
-	    return TRANSACTION_WRAPPERS;
-	  },
-
-	  /**
-	   * @return {object} The queue to collect `onDOMReady` callbacks with.
-	   */
-	  getReactMountReady: function () {
-	    return this.reactMountReady;
-	  },
-
-	  /**
-	   * `PooledClass` looks for this, and will invoke this before allowing this
-	   * instance to be reused.
-	   */
-	  destructor: function () {
-	    CallbackQueue.release(this.reactMountReady);
-	    this.reactMountReady = null;
-	  }
-	};
-
-	assign(ReactServerRenderingTransaction.prototype, Transaction.Mixin, Mixin);
-
-	PooledClass.addPoolingTo(ReactServerRenderingTransaction);
-
-	module.exports = ReactServerRenderingTransaction;
-
-/***/ },
 /* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -12683,7 +12713,7 @@
 	var ExecutionEnvironment = __webpack_require__(72);
 
 	var createNodesFromMarkup = __webpack_require__(136);
-	var emptyFunction = __webpack_require__(76);
+	var emptyFunction = __webpack_require__(78);
 	var getMarkupWrap = __webpack_require__(137);
 	var invariant = __webpack_require__(73);
 
@@ -12830,7 +12860,7 @@
 
 	'use strict';
 
-	var keyMirror = __webpack_require__(83);
+	var keyMirror = __webpack_require__(84);
 
 	/**
 	 * When a component's children are updated, a series of update configuration
@@ -12852,6 +12882,37 @@
 
 /***/ },
 /* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule quoteAttributeValueForBrowser
+	 */
+
+	'use strict';
+
+	var escapeTextContentForBrowser = __webpack_require__(36);
+
+	/**
+	 * Escapes attribute value to prevent scripting attacks.
+	 *
+	 * @param {*} value Value to escape.
+	 * @return {string} An escaped string.
+	 */
+	function quoteAttributeValueForBrowser(value) {
+	  return '"' + escapeTextContentForBrowser(value) + '"';
+	}
+
+	module.exports = quoteAttributeValueForBrowser;
+
+/***/ },
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -12951,37 +13012,6 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
 
 /***/ },
-/* 91 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule quoteAttributeValueForBrowser
-	 */
-
-	'use strict';
-
-	var escapeTextContentForBrowser = __webpack_require__(36);
-
-	/**
-	 * Escapes attribute value to prevent scripting attacks.
-	 *
-	 * @param {*} value Value to escape.
-	 * @return {string} An escaped string.
-	 */
-	function quoteAttributeValueForBrowser(value) {
-	  return '"' + escapeTextContentForBrowser(value) + '"';
-	}
-
-	module.exports = quoteAttributeValueForBrowser;
-
-/***/ },
 /* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -12998,7 +13028,7 @@
 
 	'use strict';
 
-	var keyMirror = __webpack_require__(83);
+	var keyMirror = __webpack_require__(84);
 
 	var PropagationPhases = keyMirror({ bubbled: null, captured: null });
 
@@ -13710,7 +13740,7 @@
 	var PooledClass = __webpack_require__(69);
 
 	var assign = __webpack_require__(10);
-	var emptyFunction = __webpack_require__(76);
+	var emptyFunction = __webpack_require__(78);
 	var warning = __webpack_require__(71);
 
 	/**
@@ -14388,7 +14418,7 @@
 
 	'use strict';
 
-	var ReactDOMIDOperations = __webpack_require__(90);
+	var ReactDOMIDOperations = __webpack_require__(91);
 	var LinkedValueUtils = __webpack_require__(150);
 	var ReactMount = __webpack_require__(16);
 	var ReactUpdates = __webpack_require__(19);
@@ -14547,7 +14577,7 @@
 
 	'use strict';
 
-	var ReactChildren = __webpack_require__(23);
+	var ReactChildren = __webpack_require__(24);
 	var ReactDOMSelect = __webpack_require__(108);
 
 	var assign = __webpack_require__(10);
@@ -14834,7 +14864,7 @@
 	'use strict';
 
 	var LinkedValueUtils = __webpack_require__(150);
-	var ReactDOMIDOperations = __webpack_require__(90);
+	var ReactDOMIDOperations = __webpack_require__(91);
 	var ReactUpdates = __webpack_require__(19);
 
 	var assign = __webpack_require__(10);
@@ -15517,7 +15547,7 @@
 
 	'use strict';
 
-	var emptyFunction = __webpack_require__(76);
+	var emptyFunction = __webpack_require__(78);
 
 	/**
 	 * Upstream version of event listener. Does not take into account specific
@@ -15699,7 +15729,7 @@
 
 	'use strict';
 
-	var ReactElement = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
 	var ReactEmptyComponentRegistry = __webpack_require__(60);
 	var ReactReconciler = __webpack_require__(18);
 
@@ -17059,11 +17089,11 @@
 
 	var ReactComponentEnvironment = __webpack_require__(114);
 	var ReactCurrentOwner = __webpack_require__(12);
-	var ReactElement = __webpack_require__(27);
+	var ReactElement = __webpack_require__(28);
 	var ReactInstanceMap = __webpack_require__(61);
 	var ReactPerf = __webpack_require__(17);
-	var ReactPropTypeLocations = __webpack_require__(81);
-	var ReactPropTypeLocationNames = __webpack_require__(82);
+	var ReactPropTypeLocations = __webpack_require__(82);
+	var ReactPropTypeLocationNames = __webpack_require__(83);
 	var ReactReconciler = __webpack_require__(18);
 	var ReactUpdateQueue = __webpack_require__(63);
 
@@ -18913,8 +18943,8 @@
 
 	'use strict';
 
-	var ReactPropTypes = __webpack_require__(29);
-	var ReactPropTypeLocations = __webpack_require__(81);
+	var ReactPropTypes = __webpack_require__(30);
+	var ReactPropTypeLocations = __webpack_require__(82);
 
 	var invariant = __webpack_require__(73);
 	var warning = __webpack_require__(71);
@@ -19057,7 +19087,7 @@
 
 	var instantiateReactComponent = __webpack_require__(64);
 	var shouldUpdateReactComponent = __webpack_require__(66);
-	var traverseAllChildren = __webpack_require__(77);
+	var traverseAllChildren = __webpack_require__(79);
 	var warning = __webpack_require__(71);
 
 	function instantiateChild(childInstances, child, name) {
@@ -19180,7 +19210,7 @@
 
 	'use strict';
 
-	var traverseAllChildren = __webpack_require__(77);
+	var traverseAllChildren = __webpack_require__(79);
 	var warning = __webpack_require__(71);
 
 	/**

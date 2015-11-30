@@ -28,7 +28,8 @@
 				}
 			}	
 
-			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate,displayMonth: displayMonth, minimumDate: minimumDate, showControls: true, customStyle: customStyle }), 
+			ReactDOM.render(React.createElement(Datepicker, { monthLabels: monthsCRO, onChange: onChange, selectedDate: selectedDate,displayMonth: displayMonth, minimumDate: minimumDate, showControls: true, customStyle: customStyle,
+				isInline: true }), 
 				document.getElementById("component"));
 		</script>
 	</body>

@@ -24,11 +24,20 @@ ReactDOM.render(<Datepicker />, document.getElementById("component"));
 
 ### Getting value
 To retreive selected date you need to pass onChange function which will be triggered each time
-some date is selected-
+some date is selected.
 
 ```
 function onChangeCallback(selectedDay) { /* some work */ }
 ReactDOM.render(<Datepicker onChange={onChangeCallback} />, document.getElementById("component"));
+```
+
+### Inline calendar
+If you want to have inline calendar, one when you see just date and calendar is displayed bellow after
+you click on it, just pass isInline parameter with value true.
+
+```
+var isInline = true;
+ReactDOM.render(<Datepicker isInline={isInline} />, document.getElementById("component"));
 ```
 
 ### Initial date
