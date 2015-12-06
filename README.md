@@ -31,6 +31,15 @@ function onChangeCallback(selectedDay) { /* some work */ }
 ReactDOM.render(<Datepicker onChange={onChangeCallback} />, document.getElementById("component"));
 ```
 
+### Date range
+If you want to have date range option just pass parameter isRange with value true. Then in the on change
+function you will receive object with properties startDate and endDate.
+
+```
+var isRange = true;
+ReactDOM.render(<Datepicker isRange={isRange} />, document.getElementById("component"));
+```
+
 ### Inline calendar
 If you want to have inline calendar, one when you see just date and calendar is displayed bellow after
 you click on it, just pass isInline parameter with value true.
