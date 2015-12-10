@@ -124,6 +124,6 @@ var DatepickerContainer = React.createClass({
 					{this.getCalendar(this.state.display)}
 				</div>);
 	}
-})
+});
 
 module.exports = DatepickerContainer;  

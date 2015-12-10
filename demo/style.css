@@ -7,7 +7,7 @@
 .datepicker > .header {
   display: block;
   width: 100%;
-  border: thin solid #c5d3e2;
+  border: thin solid #C5D3E2;
   text-align: center;
   padding: 0.5em;
 }
@@ -16,14 +16,18 @@
 }
 .datepicker .calendar {
   width: 100%;
-  border: thin solid #c5d3e2;
+  border: thin solid #C5D3E2;
   border-collapse: collapse;
   border-spacing: 0;
+  background: white;
+}
+.datepicker .calendar * {
+  background: white;
 }
 .datepicker .calendar .controls > div {
-  border-left: thin solid #c5d3e2;
-  border-right: thin solid #c5d3e2;
-  border-top: thin solid #c5d3e2;
+  border-left: thin solid #C5D3E2;
+  border-right: thin solid #C5D3E2;
+  border-top: thin solid #C5D3E2;
   position: relative;
   padding: 0.5em;
 }
@@ -41,14 +45,15 @@
 }
 .datepicker .calendar .controls > div > div.prev {
   left: 0;
-  border-right: thin solid #c5d3e2;
+  border-right: thin solid #C5D3E2;
 }
 .datepicker .calendar .controls > div > div.next {
   right: 0;
-  border-left: thin solid #c5d3e2;
+  border-left: thin solid #C5D3E2;
 }
 .datepicker .calendar .dayLabel {
-  border: thin solid #c5d3e2;
+  border: thin solid #C5D3E2;
+  padding: 0.5em;
 }
 .datepicker .calendar .week {
   width: 100%;
@@ -58,17 +63,17 @@
   width: 14.28571429%;
   text-align: center;
   padding: 0.5em;
-  border: thin solid #c5d3e2;
-  color: #1c2a39;
+  border: thin solid #C5D3E2;
+  color: #1C2A39;
 }
 .datepicker .calendar .week .day.selected {
-  color: #3498db;
-  border-bottom: 2px solid #3498db;
+  color: #3498DB;
+  border-bottom: 2px solid #3498DB;
 }
 .datepicker .calendar .week .day.disabled {
-  color: #c5d3e2;
+  color: #C5D3E2;
 }
 .datepicker .calendar .week .day:not(.disabled):not(.selected):hover {
   cursor: pointer;
-  background: #bccad9;
+  background: #BCCAD9;
 }

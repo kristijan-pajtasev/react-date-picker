@@ -1,1 +1,1 @@
-Datepicker = require("./datepicker")
+window.Datepicker = require("./components/Datepicker");

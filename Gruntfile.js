@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 		    webpack: {
                 cmd: function() {
                         // return 'webpack --optimize-minimize';
-                        return "babel src/js -d temp/ -b strict --presets=react,es2015 \n webpack temp/exported.js demo/bundle.js";
+                        return "babel src/js -d temp/ --presets=react,es2015 \n webpack temp/exported.js demo/bundle.js";
                 }
         },
         less: {
