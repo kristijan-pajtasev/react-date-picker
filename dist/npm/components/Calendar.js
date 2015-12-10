@@ -1,3 +1,5 @@
+"use strict";
+
 var React = require("react");
 
 var Calendar = React.createClass({
@@ -16,6 +18,7 @@ var Calendar = React.createClass({
 			this.props.onChange(day);
 		}
 	},
+
 	getWeeks: function getWeeks(weeks) {
 		var _this = this;
 
@@ -33,28 +36,28 @@ var Calendar = React.createClass({
 		);
 	},
 	getWeek: function getWeek(week) {
-		var _this = this;
+		var _this2 = this;
 
 		var selectedDay = this.state.selectedDay;
 		return week.map(function (d, i) {
 
 			var classes = ["day"];
-			if (d.getMonth() != _this.props.dates[2][2].getMonth()) {
+			if (d.getMonth() != _this2.props.dates[2][2].getMonth()) {
 				classes.push("disabled");
 			}
 
-			if (!!selectedDay && (d.getDate() == selectedDay.getDate() && d.getMonth() == selectedDay.getMonth() && d.getFullYear() == selectedDay.getFullYear())) {
+			if (!!selectedDay && d.getDate() == selectedDay.getDate() && d.getMonth() == selectedDay.getMonth() && d.getFullYear() == selectedDay.getFullYear()) {
 				classes.push("selected");
 			}
 
-			if (!!_this.props.minimumDate && _this.props.minimumDate > d) {
+			if (!!_this2.props.minimumDate && _this2.props.minimumDate > d) {
 				classes.push("disabled");
 			}
 
 			return React.createElement(
 				"td",
-				{ onClick: _this.setActive.bind(null, d, classes.indexOf("disabled") < 0),
-					className: classes.join(" "), style: _this.getStyleForClasses(classes),
+				{ onClick: _this2.setActive.bind(null, d, classes.indexOf("disabled") < 0),
+					className: classes.join(" "), style: _this2.getStyleForClasses(classes),
 					key: Math.random() * i },
 				d.getDate()
 			);
@@ -62,7 +65,7 @@ var Calendar = React.createClass({
 	},
 	getStyleForClasses: function getStyleForClasses(classes) {
 		var style = {};
-		for (var i = 0, _length = classes.length; i < _length; i++) {
+		for (var i = 0, length = classes.length; i < length; i++) {
 			var klass = classes[i];
 			this.mergeStyleForClass(style, this.props.customStyle[klass] || {});
 		}
@@ -70,14 +73,14 @@ var Calendar = React.createClass({
 	},
 	mergeStyleForClass: function mergeStyleForClass(style, styleForClass) {
 		var keys = Object.keys(styleForClass);
-		for (var i = 0, _length = keys.length; i < _length; i++) {
-			var _key = keys[i];
-			style[_key] = styleForClass[_key];
+		for (var i = 0, length = keys.length; i < length; i++) {
+			var key = keys[i];
+			style[key] = styleForClass[key];
 		}
 	},
 	getCaption: function getCaption(showControls) {
-		var prev = "<";
-		var next = ">";
+		var prev = '<';
+		var next = '>';
 		if (showControls) {
 			return React.createElement(
 				"caption",

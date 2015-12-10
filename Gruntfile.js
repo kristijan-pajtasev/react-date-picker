@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 		    webpack: {
                 cmd: function() {
                         // return 'webpack --optimize-minimize';
-                        return "babel src/js -d temp/ -b strict \n webpack temp/exported.js demo/bundle.js";
+                        return "babel src/js -d temp/ -b strict --presets=react,es2015 \n webpack temp/exported.js demo/bundle.js";
                 }
         },
         less: {
@@ -20,10 +20,10 @@ module.exports = function(grunt) {
                               return "rm -r dist/* \n" +
                                 "mkdir dist/style \n" +
                                 "lessc src/less/main.less > dist/style/style.css \n" +
-                                "babel src/js -d dist/npm -b strict --ignore src/js/exported.js \n" +
-                                "babel src/js -d temp/ -b strict \n" + 
+                                "babel src/js -d dist/npm -b strict --ignore src/js/exported.js --presets=react,es2015\n" +
+                                "babel src/js -d temp/ -b strict --presets=react,es2015 \n" +
                                 "webpack temp/exported.js dist/bundle/react-datepicker.js \n" +
-                                "babel src/js -d temp/ -b strict \n" +
+                                "babel src/js -d temp/ -b strict --presets=react,es2015 \n" +
                                 "webpack temp/exported.js dist/bundle/react-datepicker.min.js --optimize-minimize \n" +
                                 "npm publish";
                 }

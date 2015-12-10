@@ -1,3 +1,5 @@
+"use strict";
+
 var React = require("react");
 var CalendarUtil = require("../utils/CalendarUtil");
 var Calendar = require("./Calendar");
@@ -102,7 +104,7 @@ var DatepickerContainer = React.createClass({
 		}
 	},
 	render: function render() {
-		var selectedDateLabel = "DD/MM/YYYY";
+		var selectedDateLabel = 'DD/MM/YYYY';
 		if (!!this.state.selectedDay) {
 			selectedDateLabel = this.state.selectedDay.getDate() + "/" + (this.state.selectedMonth + 1) + "/" + this.state.selectedYear;
 		}

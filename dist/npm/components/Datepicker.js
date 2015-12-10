@@ -1,3 +1,5 @@
+"use strict";
+
 var DatepickerContainer = require("./DatepickerContainer");
 
 var React = require("react");
@@ -28,11 +30,11 @@ var Datepicker = React.createClass({
 		}, 50);
 	},
 	setEndDate: function setEndDate(day) {
-		var _this = this;
+		var _this2 = this;
 
 		this.setState({ endDate: day });
 		setTimeout(function () {
-			_this.onChange();
+			_this2.onChange();
 		}, 50);
 	},
 	getDatepicker: function getDatepicker(isRange) {
